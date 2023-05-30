@@ -1,40 +1,77 @@
 <template>
-   <el-form>
-
-   </el-form>>
+    <el-form :model="loginForm" :rules="fieldRules" ref="loginForm" label-position="left" label-width="0px" class="demo-ruleForm login-container">
+        <h2 class="title" style="padding-left:22px;">System Log in</h2>
+    <el-form-item prop="account">
+        <el-input type="text" v-model="loginForm.account" auto-complete="off" aria-placeholder="account"></el-input>
+    </el-form-item>
+    <el-form-item prop="password">
+        <el-input type="password" v-model="loginForm.password" aria-autocomplete="none" aria-placeholder="password"></el-input>
+    </el-form-item>
+    <el-form-item>
+        <el-button type="primary" style="width:48%;" @click="reset">reset</el-button>
+        <el-button type="primary" style="width:48%;" @click="login" :loading="loading">login</el-button>
+    </el-form-item>
+    </el-form>>
 </template>
 
 <script>
 import { dataType } from "element-plus/es/components/table-v2/src/common";
-import Cookies from"js-cookie"
+import Cookies from "js-cookie"
 export default {
-    name:'Login',
-    data(){
-        return{
-            logining:false,
-            loginForm:{
-                account:'admin',
-                password:'123456'
+    name: 'Login',
+    data() {
+        return {
+            logining: false,
+            loginForm: {
+                account: 'admin',
+                password: '123456'
             },
-            fieldRules:{
-                account:{
-                    required:true,
-                    message:'please enter your account',
-                    trigger:'blur'
+            fieldRules: {
+                account: {
+                    required: true,
+                    message: 'please enter your account',
+                    trigger: 'blur'
                 },
-                password:{
-                    required:true,
-                    message:'please enter your password',
-                    trigger:'blur'
+                password: {
+                    required: true,
+                    message: 'please enter your password',
+                    trigger: 'blur'
                 }
             },
-            checked:true
+            checked: true
         }
     },
-    methods:{
-        login(){
-            
+    methods: {
+        login() {
+            this.loading=true
+            let userInfo={
+                account:this.loginForm.account,
+                password:this.loginForm.password
+            }
         }
     }
 }
 </script>
+
+<style lang="less" scoped>
+.login-container {
+    -webkit-border-radius:5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    background-clip: padding-box;
+    margin: 100px auto;
+    width: 350px;
+    padding: 35px 35px 15px 35px;
+    background: #fff;
+    border:1px solid #eaeaea;
+    box-shadow:0 0 25px #cac6c6;
+    .title{
+        margin:0px auto 30px auto;
+        text-align: center;
+        color:#505458;
+    }
+    .remember{
+        margin: 0px 0px 35px 0px;
+    }
+}
+</style>

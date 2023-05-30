@@ -1,4 +1,4 @@
-import { baseUrl } from '@/utils/global' 
+import { baseUrl } from '@/util/global' 
 export default { 
     method: 'get', 
     // 基础url前缀 

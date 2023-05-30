@@ -1,10 +1,10 @@
-import * as login from './moudules/login' 
-import * as user from './moudules/user' 
-import * as dept from './moudules/dept' 
-import * as role from './moudules/role' 
-import * as menu from './moudules/menu' 
-import * as dict from './moudules/dict' 
-import * as log from './moudules/log'
+import * as login from './modules/login' 
+import * as user from './modules/user' 
+import * as dept from './modules/dept' 
+import * as role from './modules/role' 
+import * as menu from './modules/menu' 
+import * as dict from './modules/dict' 
+import * as log from './modules/log'
 
 export default{
     login,

@@ -24,7 +24,21 @@ export default function $axios(options){
             },
             error=>{
                 console.log('request: ',error)
-                
+                //判断请求超时
+                if(error.code==='ECONNABORTED'&&error.message.indexof('timeout'!==-1)){
+                    console.log('timeout request')
+                }
+                //重定向到错误页面
+                const errorInfo=error.response
+                console.log(errorInfo)
+                if(errorInfo){
+                    error=errorInfo.data
+                    const errorStatus=errorInfo.status;
+                    router.push({
+                        path:'/404'
+                    })
+                }
+                return Promise.reject(error)
             }
         )
     })

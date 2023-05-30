@@ -2,85 +2,85 @@
  *用户管理模块 
  */
 
-export function save(){
-    return{
-        url:'user/save',
-        type:'post',
-        data:{
-            "code":200,
-            "msg":null,
-            "data":1
+export function save() {
+    return {
+        url: 'user/save',
+        type: 'post',
+        data: {
+            "code": 200,
+            "msg": null,
+            "data": 1
         }
     }
 }
 
-export function batchDelete(){
-    return{
-        url:'user/delete',
-        type:'post',
-        data:{
-            "code":200,
-            "msg":null,
-            "data":1
+export function batchDelete() {
+    return {
+        url: 'user/delete',
+        type: 'post',
+        data: {
+            "code": 200,
+            "msg": null,
+            "data": 1
         }
     }
 }
 
-export function findPage(params){
-    let findPageData={
-        "code":200,
-        "msg":null,
-        "data":{}
+export function findPage(params) {
+    let findPageData = {
+        "code": 200,
+        "msg": null,
+        "data": {}
     }
-    let pageNum=1
-    let pageSize=8
-    if(params!==null){
+    let pageNum = 1
+    let pageSize = 8
+    if (params !== null) {
 
     }
-    let content=this.getContent(pageNum,pageSize)
-        findPageData.data.pageNum=pageNum
-        findPageData.data.pageSize=pageSize
-        findPageData.data.totalSize=50
-        findPageData.data.content=content
-    return{
-        url:'user/findPage',
-        type:'post',
-        data:findPageData
+    let content = this.getContent(pageNum, pageSize)
+    findPageData.data.pageNum = pageNum
+    findPageData.data.pageSize = pageSize
+    findPageData.data.totalSize = 50
+    findPageData.data.content = content
+    return {
+        url: 'user/findPage',
+        type: 'post',
+        data: findPageData
     }
 }
 
-export function getContent(pageNum,pageSize){
-    let content=[]
-    for(let i=0;i<pageSize;i++){
-        let obj={}
-        let index=((pageNum-1)*pageSize)+i+1
-        obj.id=index
-        obj.name='sin'+index
-        obj.password='9ec9750e709431dad22365cabc5c625482e574c74adaebba7dd02f1129e4ce1d'
-        obj.salt='test'
-        obj.email='sin'+index+'@carrywealth.com'
-        obj.mobil='18854209645'
-        obj.status=1
-        obj.deptId=12
-        obj.deptName='IT部'
-        obj.status=1
-        if(i%2===0){
-            obj.depId=13
-            obj.deptName='市场部'
+export function getContent(pageNum, pageSize) {
+    let content = []
+    for (let i = 0; i < pageSize; i++) {
+        let obj = {}
+        let index = ((pageNum - 1) * pageSize) + i + 1
+        obj.id = index
+        obj.name = 'sin' + index
+        obj.password = '9ec9750e709431dad22365cabc5c625482e574c74adaebba7dd02f1129e4ce1d'
+        obj.salt = 'test'
+        obj.email = 'sin' + index + '@carrywealth.com'
+        obj.mobil = '18854209645'
+        obj.status = 1
+        obj.deptId = 12
+        obj.deptName = 'IT部'
+        obj.status = 1
+        if (i % 2 === 0) {
+            obj.depId = 13
+            obj.deptName = '市场部'
         }
-        obj.creatBy='admin'
-        obj.createTime='2023-05-21 08:50:21'
-        obj.creatBy='admin'
-        obj.createTime='2023-05-21 08:50:21'
+        obj.creatBy = 'admin'
+        obj.createTime = '2023-05-21 08:50:21'
+        obj.creatBy = 'admin'
+        obj.createTime = '2023-05-21 08:50:21'
         content.push(obj)
     }
 }
 //查找用户的菜单权限标识集合
-export function findPermissions(){
-    let permsData={
-        "code":200,
-        "msg":null,
-        "data":[
+export function findPermissions() {
+    let permsData = {
+        "code": 200,
+        "msg": null,
+        "data": [
             null,
             "sys:user:view",
             "sys:menu:delete",
@@ -105,9 +105,9 @@ export function findPermissions(){
             "sys:role:add"
         ]
     }
-    return{
-        url:'user/findPermissions',
-        type:'get',
-        data:permsData
+    return {
+        url: 'user/findPermissions',
+        type: 'get',
+        data: permsData
     }
 }
