@@ -1,28 +1,26 @@
 <template>
   <div id="app">
-    <img alt="rmportal logo" src="./assets/logo.gif">
+   
     <el-config-provider :locale="locale">
       <router-view />
     </el-config-provider>
-    
-   
+
   </div>
-  
 </template>
 <script>
 import { ElConfigProvider } from "element-plus";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
-export default{
-   name:'rm-portal',
-   components:{
-    [ElConfigProvider.name]:ElConfigProvider,//添加组件
-   },
-   data(){
-    return{
-      locale:zhCn
+export default {
+  name: 'rm-portal',
+  components: {
+    [ElConfigProvider.name]: ElConfigProvider,//添加组件
+  },
+  data() {
+    return {
+      locale: zhCn
     }
-   }
- }
+  }
+}
 // import axios from 'axios'
 // import {ref,reactive} from 'vue'
 //import watermark from './util/watermark'
@@ -45,10 +43,10 @@ export default{
   text-align: center;
   color: #484a4d;
   position: absolute;
-  top:0px;
+  top: 0px;
   bottom: 0px;
   left: 0px;
   right: 0px;
-  
+
 }
 </style>

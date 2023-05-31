@@ -1,22 +1,30 @@
 <template>
-    <el-form :model="loginForm" :rules="fieldRules" ref="loginForm" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-        <h2 class="title" style="padding-left:22px;">System Log in</h2>
-    <el-form-item prop="account">
-        <el-input type="text" v-model="loginForm.account" auto-complete="off" aria-placeholder="account"></el-input>
-    </el-form-item>
-    <el-form-item prop="password">
-        <el-input type="password" v-model="loginForm.password" aria-autocomplete="none" aria-placeholder="password"></el-input>
-    </el-form-item>
-    <el-form-item>
-        <el-button type="primary" style="width:48%;" @click="reset">reset</el-button>
-        <el-button type="primary" style="width:48%;" @click="login" :loading="loading">login</el-button>
-    </el-form-item>
-    </el-form>>
+    <el-form :model="loginForm" :rules="fieldRules" ref="loginForm" label-position="left" label-width="auto"
+        class="demo-ruleForm login-container">
+        <img alt="rmportal logo" src="../assets/logo.gif">
+        <h2 class="title" style="padding-left:22px;">Sign in to RMPortal</h2>
+
+        <el-form-item prop="account">
+            <el-input type="text" v-model="loginForm.account" auto-complete="off" placeholder="account"></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+            <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="password"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" style="width:48%;" @click="reset">Reset</el-button>
+            <el-button type="primary" style="width:48%;" @click="login" :loading="loading">Sign in</el-button>
+        </el-form-item>
+    </el-form>
 </template>
 
 <script>
 import { dataType } from "element-plus/es/components/table-v2/src/common";
+import mock from '@/mock/index'
 import Cookies from "js-cookie"
+import http from '@/http/api'
+
+import store from '../store/index'
+import router from "@/router";
 export default {
     name: 'Login',
     data() {
@@ -43,11 +51,33 @@ export default {
     },
     methods: {
         login() {
-            this.loading=true
-            let userInfo={
-                account:this.loginForm.account,
-                password:this.loginForm.password
+            this.loading = true
+            let userInfo = {
+                account: this.loginForm.account,
+                password: this.loginForm.password
             }
+          
+            
+            http.login.login(JSON.stringify(userInfo)).then((res) => {
+                if (res.message != null) {
+                    this.$message({
+                        message: res.message,
+                        type: 'error'
+                    })
+                } else {
+                    Cookies.set('token', res.data.token)//放置token到Cookie
+                    sessionStorage.setItem('user', userInfo.account)
+                    store.commit('menuRouteLoaded',false)//要求重新加载导航菜单
+                    router.push('/')
+                }
+
+                this.loading = false
+            }).catch(function (res) {
+                alert(res)
+            })
+        },
+        reset() {
+            this.$refs.loginForm.resetFields();
         }
     }
 }
@@ -55,7 +85,7 @@ export default {
 
 <style lang="less" scoped>
 .login-container {
-    -webkit-border-radius:5px;
+    -webkit-border-radius: 5px;
     border-radius: 5px;
     -moz-border-radius: 5px;
     background-clip: padding-box;
@@ -63,14 +93,16 @@ export default {
     width: 350px;
     padding: 35px 35px 15px 35px;
     background: #fff;
-    border:1px solid #eaeaea;
-    box-shadow:0 0 25px #cac6c6;
-    .title{
-        margin:0px auto 30px auto;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 0 25px #cac6c6;
+
+    .title {
+        margin: 0px auto 30px auto;
         text-align: center;
-        color:#505458;
+        color: #505458;
     }
-    .remember{
+
+    .remember {
         margin: 0px 0px 35px 0px;
     }
 }

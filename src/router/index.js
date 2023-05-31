@@ -25,8 +25,23 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.length == 0) return next({ path: '/404' });
-
-    next({ path: '/login' })
+    //登录界面登录成功之后，用户信息保持在会话
+    //存在时间为会话生命周期，页面关闭即失效
+    let user = sessionStorage.getItem('user');
+    if (to.path == '/login') {
+        //如果访问登录界面和存在用户会话信息，直接跳转到主页
+        if (user) {
+            next({ path: '/' })
+        } else {
+            next()
+        }
+    }else{//非登录界面，而且不存在会话信息，跳转到登录界面
+            if(!user){
+                next({path:'/login'})
+            }else{
+                next()
+            }
+    }
 })
+
 export default router

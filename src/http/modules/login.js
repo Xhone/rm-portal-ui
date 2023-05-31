@@ -5,7 +5,7 @@ import axios from '../axios.js'
 //登录
 export const login=data=>{
     return axios({
-        url:'login',
+        url:'/login',
         method:'post',
         data
     })
