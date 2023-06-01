@@ -5,7 +5,12 @@ const routes = [
     {
         path: '/',
         name: 'home',
-        component: () => import('@/views/Home.vue')
+        component: () => import('@/views/Home.vue'),
+        children: [
+           {path:'/main',name:'main',component:()=>('@views/sys/Main.vue')},
+           {path:'/user',name:'user',component:()=>('@views/sys/User.vue')},
+           {path:'/menu',name:'menu',component:()=>('@views/sys/menu.vue')}
+        ]
     },
     {
         path: '/login',
@@ -35,12 +40,12 @@ router.beforeEach((to, from, next) => {
         } else {
             next()
         }
-    }else{//非登录界面，而且不存在会话信息，跳转到登录界面
-            if(!user){
-                next({path:'/login'})
-            }else{
-                next()
-            }
+    } else {//非登录界面，而且不存在会话信息，跳转到登录界面
+        if (!user) {
+            next({ path: '/login' })
+        } else {
+            next()
+        }
     }
 })
 

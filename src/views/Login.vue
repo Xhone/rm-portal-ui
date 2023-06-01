@@ -65,6 +65,7 @@ export default {
                         type: 'error'
                     })
                 } else {
+    
                     Cookies.set('token', res.data.token)//放置token到Cookie
                     sessionStorage.setItem('user', userInfo.account)
                     store.commit('menuRouteLoaded',false)//要求重新加载导航菜单

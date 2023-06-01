@@ -41,6 +41,12 @@ function fnCreate(mod, isOpen = true) {
     }
 }
 
+Mock.mock('http://localhost:8080/login',{
+    data:{
+        'token':'77ae89be36504adfb5c09ef71409ea0e'
+    }
+})
+
 Mock.mock('http://localhost:8080/user', {
     'name': '@name',
     'email': '@email',

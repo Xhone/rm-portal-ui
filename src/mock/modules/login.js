@@ -25,7 +25,7 @@ export function logout() {
         "code": 200,
         "msg": null,
         "data": {
-
+            
         }
     }
     return {
