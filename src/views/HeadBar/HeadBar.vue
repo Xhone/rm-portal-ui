@@ -1,6 +1,6 @@
 <template>
     <div class="headbar" style="background:#14889A" :class="position-left">
-       
+       <el-header></el-header>
     </div>
 </template>
 <script>

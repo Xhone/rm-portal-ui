@@ -41,6 +41,45 @@ export default createStore({
             state.isLoading=flag
         }
     },
+    getters:{
+        getPermission:(state)=>(path)=>{    //调用方式 store.getters.getPermission('User')
+            if(!path) return state.permission;
+        },
+        getUserInfo:(state)=>()=>{
+            getUserInfo(state);
+            return state.userInfo;
+        },getUserName:(state)=>{
+            getUserInfo(state);
+            if(state.userInfo){
+                return state.userInfo.userName;
+            }
+            return 'No login information was obtained'
+        },
+        getToken:(state)=>()=>{
+            getUserInfo(state);
+            if(state.userInfo){
+                return state.userInfo.token;
+            }
+            return '';
+        },
+        isLogin:(state)=>()=>{
+            return state.isLoading;
+        },
+        getData:(state)=>()=>{
+            return state.data;
+        }
+    },
+    actions:{
+        setPermission(context,data){
+            context.commit('setPermission',data);//调用方式 store.dispatch('push')
+        },
+        toDo(context){
+            return context.Store.m;
+        },
+        onLoading(context,flag){
+            context.commit("updateLoadingState",flag);
+        }
+    },
     modules: {
         app: app,
         iframe: iframe,

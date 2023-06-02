@@ -1,15 +1,30 @@
 <template>
     <div class="container">
+        <el-container>
+
+            <el-aside width="180px">
+                <nav-bar></nav-bar>
+            </el-aside>
+            <el-container>
+                <el_header>
+                    <head-bar></head-bar>
+                </el_header>
+                <el-main>
+                    <main-content></main-content>
+                </el-main>
+            </el-container>
+
+        </el-container>
         <!-- <h2>Home Page</h2>
         <el-button type="primary" @click="testAxios()">test</el-button>
         <el-button type="primary" @click="getUser()">getuser</el-button>
         <el-button type="primary" @click="getMenu()">getMenu</el-button> -->
         <!--导航菜单栏-->
-        <NavBar/>
+        <!-- <NavBar/> -->
         <!--头部区域-->
-        <HeadBar/>
+        <!-- <HeadBar/> -->
         <!--主内容区域-->
-        <MainContent/>
+        <!-- <MainContent/> -->
     </div>
 </template>
 
