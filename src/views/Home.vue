@@ -1,30 +1,16 @@
 <template>
     <div class="container">
-        <el-container>
-
-            <el-aside width="180px">
-                <nav-bar></nav-bar>
-            </el-aside>
-            <el-container>
-                <el_header>
-                    <head-bar></head-bar>
-                </el_header>
-                <el-main>
-                    <main-content></main-content>
-                </el-main>
-            </el-container>
-
-        </el-container>
+        <!--导航菜单栏-->
+        <nav-bar></nav-bar>
+        <!--头部区域-->
+       <head-bar></head-bar>
+        <!--主内容区域-->
+     
         <!-- <h2>Home Page</h2>
         <el-button type="primary" @click="testAxios()">test</el-button>
         <el-button type="primary" @click="getUser()">getuser</el-button>
         <el-button type="primary" @click="getMenu()">getMenu</el-button> -->
-        <!--导航菜单栏-->
-        <!-- <NavBar/> -->
-        <!--头部区域-->
-        <!-- <HeadBar/> -->
-        <!--主内容区域-->
-        <!-- <MainContent/> -->
+       
     </div>
 </template>
 
@@ -74,7 +60,7 @@ export default {
 
 <style lang="less" scoped>
 .container {
-    position: absolute;
+    position:absolute;
     top: 0px;
     left: 0px;
     right: 0px;
