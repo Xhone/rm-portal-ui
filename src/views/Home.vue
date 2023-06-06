@@ -1,16 +1,12 @@
 <template>
     <div class="container">
         <!--导航菜单栏-->
-        <nav-bar></nav-bar>
+        <!-- <nav-bar></nav-bar> -->
         <!--头部区域-->
        <head-bar></head-bar>
         <!--主内容区域-->
-     
-        <!-- <h2>Home Page</h2>
-        <el-button type="primary" @click="testAxios()">test</el-button>
-        <el-button type="primary" @click="getUser()">getuser</el-button>
-        <el-button type="primary" @click="getMenu()">getMenu</el-button> -->
-       
+        <main-content></main-content>
+
     </div>
 </template>
 

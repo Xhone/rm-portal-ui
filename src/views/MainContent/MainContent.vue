@@ -7,7 +7,13 @@
     </div>
     </div>
 </template>
-<script></script>
+<script>
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+    name:'MainContent'
+})
+</script>
 <style lang="less" scoped>
 
 </style>

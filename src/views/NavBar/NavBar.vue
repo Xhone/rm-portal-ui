@@ -1,6 +1,7 @@
 <template>
 <div class="menu-bar-container">
-<div class="logo" style="background:#14889A" :class="menu-bar-width" @click="$router.push('/')">
+<div class="logo" style="background:#14889A;" :class="collapse?'menu-bar-collapse-width':'menu-bar-width'" 
+@click="$router.push('/')">
     <img v-if="collapse" src="@/assets/logo.gif"/>
     <div>{{ collapse?'':appName }}</div>
 </div>
@@ -11,6 +12,19 @@
 </div>
 </template>
 <script>
+import {ref} from 'vue'
+export default(await import('vue')).defineComponent({
+    name:"NavBar",
+    setup(){
+        const collapse=ref(false);
+        const appName=ref("RM Portal");
+
+        return{
+            collapse,
+            appName,
+        }
+    }
+})
 </script>
 <style lang="less" scoped>
 .menu-bar-container{

@@ -1,11 +1,13 @@
 <template>
     <div class="headbar" style="background:#14889A;" :class="collapse?'position-collapse-left':'position-left'">
      <!--导航收缩-->
-     <span class="hamburg">
-      <el-menu :default-active="activeIndex" class="el-menu-demo" background-color="#545c64" text-color="#fff" mode="horizontal">
-        <el-menu-item><hamburger :isActive="collapse"></hamburger></el-menu-item>
+     <!-- <div class="hamburg">
+      <el-menu :default-active="activeIndex" class="el-menu-demo" background-color="#14889A" text-color="#fff" mode="horizontal">
+        <el-menu-item  @click="onCollapse">
+          <hamburger :isActive="collapse"></hamburger>
+        </el-menu-item>
       </el-menu>
-     </span>
+    </div> -->
     </div>
 </template>
 <script>
