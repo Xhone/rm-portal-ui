@@ -1,15 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
-
+import api from '@/http/api'
+import store from '../store';
+import viewgird from './viewGird'
 const routes = [
     {
         path: '/',
         name: 'home',
         component: () => import('@/views/Home.vue'),
         children: [
-           {path:'/main',name:'main',component:()=>('@views/sys/Main.vue')},
-           {path:'/user',name:'user',component:()=>('@views/sys/User.vue')},
-           {path:'/menu',name:'menu',component:()=>('@views/sys/menu.vue')}
+            ...viewgird,
+            // { path: '/main', name: 'main', component: () => ('@views/sys/Main.vue') },
+            // { path: '/user', name: 'user', component: () => ('@views/sys/User.vue') },
+            // { path: '/menu', name: 'menu', component: () => ('@views/sys/menu.vue') }
         ]
     },
     {
@@ -44,9 +46,39 @@ router.beforeEach((to, from, next) => {
         if (!user) {
             next({ path: '/login' })
         } else {
+            //加载动态菜单和路由
+            addDynamicMenuAndRoutes(user, to, from);
             next()
         }
     }
 })
+/**
+ * 加载动态菜单和路由
+ */
+function addDynamicMenuAndRoutes(user, to, from) {
+    //动态菜单和路由是否存在
+    if (store.state.app.menuRouteLoaded) {
+        return
+    }
+    api.menu.findNavTree({'userName':user})
+    .then(res=>{
+        let dynamicRoutes=addDynamicRoutes(res.data);
+        router.addRoute(router.options.routes);
+        //保存加载状态
+        store.commit('menuRouteLoaded',true);
+        //保存菜单树
+        store.commit('setNavTree',res.data);
+    }).then(res=>{
+        api.user.findPermissions({'name':user}).then(res=>{
+            store.commit('setPerms',res.data);
+        })
+    }).catch(function(res){
 
+    });
+
+}
+
+function addDynamicRoutes(menuList=[],routes=[]){
+
+}
 export default router

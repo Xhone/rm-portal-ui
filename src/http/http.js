@@ -86,11 +86,11 @@ function closeLoading() {
 function checkResponse(res) {
     //刷新token
     if (!res.headers) {
-        if (res.getResponseHeader("vol_exp") == "1") {
+        if (res.getResponseHeader("rm_exp") == "1") {
             replaceToken();
         }
     }
-    else if (res.headers.vol_exp == "1") {
+    else if (res.headers.rm_exp == "1") {
         replaceToken();
     }
 }

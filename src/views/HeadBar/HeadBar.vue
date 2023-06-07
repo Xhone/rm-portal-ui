@@ -1,13 +1,19 @@
 <template>
     <div class="headbar" style="background:#14889A;" :class="collapse?'position-collapse-left':'position-left'">
      <!--导航收缩-->
-     <!-- <div class="hamburg">
-      <el-menu :default-active="activeIndex" class="el-menu-demo" background-color="#14889A" text-color="#fff" mode="horizontal">
+     <span class="hamburg">
+      <i @click="onCollapse" class="el-icon-s-fold collapse-menu"/>
+      <!-- <el-menu :default-active="activeIndex" class="el-menu-demo" background-color="#14889A" text-color="#fff" mode="horizontal">
         <el-menu-item  @click="onCollapse">
-          <hamburger :isActive="collapse"></hamburger>
+          
+          <hamburger :isActive="collapse"></hamburger> 
         </el-menu-item>
-      </el-menu>
-    </div> -->
+      </el-menu> -->
+    </span>
+    <span class="navbar">
+
+    </span>
+    <span class="toolbar"></span>
     </div>
 </template>
 <script>
@@ -57,7 +63,10 @@ export default defineComponent({
   border-left-style: solid;
 }
 
-.hamburg, .nvabar{
+.hamburg{
+  float: left;
+}
+.nvabar{
   float: left;
 }
 .position-left{

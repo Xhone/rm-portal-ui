@@ -2,27 +2,36 @@
 <div class="menu-bar-container">
 <div class="logo" style="background:#14889A;" :class="collapse?'menu-bar-collapse-width':'menu-bar-width'" 
 @click="$router.push('/')">
-    <img v-if="collapse" src="@/assets/logo.gif"/>
+    <img v-show="collapse" src="@/assets/logo.gif"/>
     <div>{{ collapse?'':appName }}</div>
 </div>
 <!--导航菜单-->
-<el-menu default-active="1" :class="menu-bar-width">
-
+<el-menu default-active="1" class="el-menu-vertical-demo" :class="menu-bar-width">
+<el-submenu index="1" class="el-icon-system">
+    <template slot="title">
+        <i class="el-icon-user"></i>
+        <span slot="title">系统</span>
+    </template>
+    <el-menu-item index="1-1" class="el-icon-user">用户管理</el-menu-item>
+    <el-menu-item index="1-2" class="el-icon-menu" @click="$router.push('menu')">菜单管理</el-menu-item>
+</el-submenu>
 </el-menu>
 </div>
 </template>
 <script>
 import {ref} from 'vue'
+import { mapState } from 'vuex';
+import state from '@/store'
 export default(await import('vue')).defineComponent({
     name:"NavBar",
     setup(){
-        const collapse=ref(false);
-        const appName=ref("RM Portal");
-
-        return{
-            collapse,
-            appName,
-        }
+          
+    },
+    computed:{
+        ...mapState({
+            appName:state=>state.app.appName,
+            collapse:state=>state.app.collapse,
+        })
     }
 })
 </script>

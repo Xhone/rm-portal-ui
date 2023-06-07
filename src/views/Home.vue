@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <!--导航菜单栏-->
-        <!-- <nav-bar></nav-bar> -->
+        <nav-bar></nav-bar>
         <!--头部区域-->
        <head-bar></head-bar>
         <!--主内容区域-->

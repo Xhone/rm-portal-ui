@@ -86,7 +86,7 @@ import PopupTreeInput from "@/components/PopupTreeInput"
 import KtTable from "@/views/Core/KtTable"
 import KtButton from "@/views/Core/KtButton"
 import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
-import { format } from "@/utils/datetime"
+import { format } from "@/util/datetime"
 export default {
     components: {
         PopupTreeInput,
