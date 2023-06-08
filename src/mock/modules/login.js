@@ -14,7 +14,7 @@ export function login() {
         }
     }
     return {
-        url: 'login',
+        url: 'api/login',
         type: 'post',
         data: loginData
     }

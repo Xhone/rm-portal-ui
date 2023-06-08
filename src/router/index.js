@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import api from '@/http/api'
 import store from '../store';
 import viewgird from './viewGird'
+//import GenMPO from '@/views/PurchaseOrder/GenMPO.vue'
 const routes = [
     {
         path: '/',
@@ -9,9 +10,8 @@ const routes = [
         component: () => import('@/views/Home.vue'),
         children: [
             ...viewgird,
-            // { path: '/main', name: 'main', component: () => ('@views/sys/Main.vue') },
-            // { path: '/user', name: 'user', component: () => ('@views/sys/User.vue') },
-            // { path: '/menu', name: 'menu', component: () => ('@views/sys/menu.vue') }
+             //{ path: '/GenMPO', name: 'GenMPO', component:GenMPO },
+          
         ]
     },
     {
@@ -23,7 +23,8 @@ const routes = [
         path: '/404',
         name: 'notFound',
         component: () => { return import('@/views/404.vue') }
-    }
+    },
+   
 ];
 
 const router = createRouter({
@@ -47,7 +48,7 @@ router.beforeEach((to, from, next) => {
             next({ path: '/login' })
         } else {
             //加载动态菜单和路由
-            addDynamicMenuAndRoutes(user, to, from);
+            //addDynamicMenuAndRoutes(user, to, from);
             next()
         }
     }

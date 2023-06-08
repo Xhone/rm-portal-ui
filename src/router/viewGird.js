@@ -9,6 +9,11 @@ let viewgird=[
         name:'menu',
         component:()=>import('@/views/sys/Menu.vue')
     },
+    {
+        path:'/GenMPO',
+        name:'GenMPO',
+        component:()=>import('@/views/PurchaseOrder/GenMPO.vue')
+    }
 ]
 
 export default viewgird

@@ -159,6 +159,7 @@ export default defineComponent({
 
             Object.assign(_config.$tabs, { open: open, close: close })
         };
+       
         created();
         return {
             menuWidth,
