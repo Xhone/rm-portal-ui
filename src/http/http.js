@@ -12,10 +12,10 @@ import { ElLoading as Loading, ElMessage as Message } from 'element-plus';
 let loadingInstance;
 let loadingStatus = false;
 if (process.env.NODE_ENV == 'development') {
-    axios.defaults.baseURL = 'http://localhost:44311/';
+    axios.defaults.baseURL = 'https://localhost:44311/';
 }
 else if (process.env.NODE_ENV == 'debug') {
-    axios.defaults.baseURL = 'http://localhost:44311/';
+    axios.defaults.baseURL = 'https://localhost:44311/';
 }
 
 else if (process.env.NODE_ENV == 'production') {

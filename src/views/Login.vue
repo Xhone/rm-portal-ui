@@ -4,8 +4,8 @@
         <img alt="rmportal logo" src="../assets/logo.gif">
         <h2 class="title" style="padding-left:22px;">Sign in to RMPortal</h2>
 
-        <el-form-item prop="account">
-            <el-input type="text" v-model="loginForm.account" auto-complete="off" placeholder="account"></el-input>
+        <el-form-item prop="username">
+            <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
             <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="password"></el-input>
@@ -19,10 +19,10 @@
 
 <script>
 import { dataType } from "element-plus/es/components/table-v2/src/common";
-import mock from '@/mock/index'
+//import mock from '@/mock/index'
 import Cookies from "js-cookie"
-import http from '@/http/api'
-
+//import http from '@/http/api'
+import http from '@/http/http.js';
 import store from '../store/index'
 import router from "@/router";
 export default {
@@ -31,11 +31,11 @@ export default {
         return {
             logining: false,
             loginForm: {
-                account: 'admin',
+                username: 'admin',
                 password: '123456'
             },
             fieldRules: {
-                account: {
+                username: {
                     required: true,
                     message: 'please enter your account',
                     trigger: 'blur'
@@ -52,30 +52,44 @@ export default {
     methods: {
         login() {
             this.loading = true
-            let userInfo = {
-                account: this.loginForm.account,
+            let loginInfo = {
+                username: this.loginForm.username,
                 password: this.loginForm.password
             }
-          
-            
-            http.login.login(JSON.stringify(userInfo)).then((res) => {
+
+            http.post('/api/User/login', loginInfo, "logging").then((res) => {
                 if (res.message != null) {
                     this.$message({
                         message: res.message,
                         type: 'error'
                     })
                 } else {
-    
-                    Cookies.set('token', res.data.token)//放置token到Cookie
-                    sessionStorage.setItem('user', userInfo.account)
-                    store.commit('menuRouteLoaded',false)//要求重新加载导航菜单
+                    sessionStorage.setItem('user', userInfo.username)
+                    store.commit('menuRouteLoaded', false)//要求重新加载导航菜单
                     router.push('/')
                 }
-
-                this.loading = false
-            }).catch(function (res) {
-                alert(res)
+                this.loading=false;
+            }).catch(error=>{
+                alert(error);
             })
+            // http.login.login(JSON.stringify(loginInfo)).then((res) => {
+            //     if (res.message != null) {
+            //         this.$message({
+            //             message: res.message,
+            //             type: 'error'
+            //         })
+            //     } else {
+
+            //         //Cookies.set('token', res.data.token)//放置token到Cookie
+            //         sessionStorage.setItem('user', userInfo.username)
+            //         store.commit('menuRouteLoaded',false)//要求重新加载导航菜单
+            //         router.push('/')
+            //     }
+
+            //     this.loading = false
+            // }).catch(function (res) {
+            //     alert(res)
+            // })
         },
         reset() {
             this.$refs.loginForm.resetFields();
