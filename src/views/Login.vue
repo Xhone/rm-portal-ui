@@ -21,15 +21,18 @@
 import { dataType } from "element-plus/es/components/table-v2/src/common";
 //import mock from '@/mock/index'
 import Cookies from "js-cookie"
-//import http from '@/http/api'
-import http from '@/http/http.js';
+import axios from "axios";
+import http from '@/http/api'
+//import http from '@/http/http.js';
 import store from '../store/index'
 import router from "@/router";
+import { alertProps } from "element-plus";
 export default {
     name: 'Login',
     data() {
         return {
             logining: false,
+           
             loginForm: {
                 username: 'admin',
                 password: '123456'
@@ -56,40 +59,46 @@ export default {
                 username: this.loginForm.username,
                 password: this.loginForm.password
             }
-
-            http.post('/api/User/login', loginInfo, "logging").then((res) => {
-                if (res.message != null) {
-                    this.$message({
-                        message: res.message,
-                        type: 'error'
-                    })
-                } else {
-                    sessionStorage.setItem('user', userInfo.username)
-                    store.commit('menuRouteLoaded', false)//要求重新加载导航菜单
-                    router.push('/')
-                }
-                this.loading=false;
-            }).catch(error=>{
-                alert(error);
-            })
-            // http.login.login(JSON.stringify(loginInfo)).then((res) => {
+            
+            
+            // axios.get('https://localhost:44311/api/User/1').then((res)=>{
             //     if (res.message != null) {
             //         this.$message({
             //             message: res.message,
             //             type: 'error'
             //         })
             //     } else {
-
-            //         //Cookies.set('token', res.data.token)//放置token到Cookie
-            //         sessionStorage.setItem('user', userInfo.username)
-            //         store.commit('menuRouteLoaded',false)//要求重新加载导航菜单
+            //         alert("成功访问")
+            //         sessionStorage.setItem('user', loginInfo.username)
+            //         store.commit('menuRouteLoaded', false)//要求重新加载导航菜单
             //         router.push('/')
             //     }
-
-            //     this.loading = false
-            // }).catch(function (res) {
-            //     alert(res)
+            //     this.loading=false;
+            // }).catch(error=>{
+            //     alert('error: '+error);
             // })
+            
+
+          
+            //JSON.stringify(loginInfo)
+            http.login.login2(loginInfo).then((res) => {
+                if (res.message != null) {
+                    this.$message({
+                        message: res.message,
+                        type: 'error'
+                    })
+                } else {
+
+                    //Cookies.set('token', res.data.token)//放置token到Cookie
+                    sessionStorage.setItem('user', loginInfo.username)
+                    store.commit('menuRouteLoaded',false)//要求重新加载导航菜单
+                    router.push('/')
+                }
+
+                this.loading = false
+            }).catch(function (res) {
+                alert(res.message)
+            })
         },
         reset() {
             this.$refs.loginForm.resetFields();
