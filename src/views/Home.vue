@@ -1,9 +1,10 @@
 <template>
     <div class="container">
-        <!--导航菜单栏-->
+
+        <!-- 导航菜单栏-->
         <nav-bar></nav-bar>
         <!--头部区域-->
-       <head-bar></head-bar>
+        <head-bar></head-bar>
         <!--主内容区域-->
         <main-content></main-content>
 
@@ -25,7 +26,7 @@ export default {
     },
     methods: {
         testAxios() {
-            axios.get('http://localhost:8080')
+            axios.get('https://localhost:44311')
                 .then(function (res) {
                     alert(res.data);
                 }).catch(function (res) {
@@ -34,7 +35,7 @@ export default {
 
         },
         getUser() {
-            axios.get('http://localhost:8080/user')
+            axios.get('https://localhost:44311/api/user')
                 .then(function (res) {
                     alert(res.data);
                 }).catch(function (res) {
@@ -42,7 +43,7 @@ export default {
                 })
         },
         getMenu() {
-            axios.get('http://localhost:8080/menu')
+            axios.get('https://localhost:44311/api/menu')
                 .then(function (res) {
                     alert(res.data);
                 }).catch(function (res) {
@@ -56,7 +57,7 @@ export default {
 
 <style lang="less" scoped>
 .container {
-    position:absolute;
+    position: absolute;
     top: 0px;
     left: 0px;
     right: 0px;

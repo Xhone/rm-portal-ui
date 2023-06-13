@@ -6,24 +6,36 @@
             <div>{{ collapse ? '' : appName }}</div>
         </div>
         <!--导航菜单-->
-        <el-menu default-active="1" class="el-menu-vertical-demo" :class="collapse?'menu-bar-collapse-width':'menu-bar-width'"
-        :collapse="collapse" @open="handleOpen" @close="handleClose">
-            <el-submenu index="1" class="el-icon-system">
-                <template slot="title">
-                    <i class="el-icon-user"></i>
-                    <span slot="title">Purchase Order</span>
+        <el-menu default-active="1" class="el-menu-vertical-demo"
+            :class="collapse ? 'menu-bar-collapse-width' : 'menu-bar-width'" :collapse="collapse" @open="handleOpen"
+            @close="handleClose">
+            <el-sub-menu index="1">
+                <template #title>
+                    <i class="el-icon-edit"></i>
+                    <span>Purchase Order</span>
                 </template>
-                <el-menu-item index="1-1" class="el-icon-edit" @click="this.$router.push({name:'GenMPO'})">Gen MPO</el-menu-item>
-              
-            </el-submenu>
-            <el-submenu index="2" class="el-icon-system">
-                <template slot="title">
-                    <i class="el-icon-user"></i>
-                    <span slot="title">系统</span>
+                <el-menu-item index="1-1" class="el-icon-edit" @click="this.$router.push({ name: 'GenMPO' })">Gen
+                    MPO</el-menu-item>
+
+            </el-sub-menu>
+            <el-sub-menu index="2">
+                <template #title>
+                    <i class="el-icon-document"/>
+                    <span>Export to RM1</span>
                 </template>
-                <el-menu-item index="2-1" class="el-icon-user">用户管理</el-menu-item>
-                <el-menu-item index="2-2" class="el-icon-menu" @click="$router.push('menu')">菜单管理</el-menu-item>
-            </el-submenu>
+                <el-menu-item index="2-1">
+                    <el-icon><Histogram /></el-icon>
+                    <template #title>Packing List</template>
+                </el-menu-item>
+            </el-sub-menu>
+            <el-sub-menu index="3" disabled>
+                <template #title>
+                    <i class="el-icon-setting"></i>
+                    <span>Setting</span>
+                </template>
+                <el-menu-item index="3-1" class="el-icon-user">用户管理</el-menu-item>
+                <el-menu-item index="3-2" class="el-icon-menu" @click="$router.push('menu')">菜单管理</el-menu-item>
+            </el-sub-menu>
         </el-menu>
     </div>
 </template>
@@ -34,11 +46,11 @@ import store from '@/store';
 export default (await import('vue')).defineComponent({
     name: "NavBar",
     setup() {
-        const handleOpen=(key,keyPath)=>{
-            console.log(key,keyPath);
+        const handleOpen = (key, keyPath) => {
+            console.log(key, keyPath);
         }
-        const handleClose=(key,keyPath)=>{
-            console.log(key,keyPath);
+        const handleClose = (key, keyPath) => {
+            console.log(key, keyPath);
         }
         // const handleRoute=(route)=>{
         //     //tab标签页被选中，如果不存在就添加
@@ -53,13 +65,13 @@ export default (await import('vue')).defineComponent({
         //     }
         //     this.mainTabsActiveName=tab.name;
         //     //切换标签页时同步更新高亮菜单
-            
+
         // }
         // const created=()=>{
         //     handleRoute(this.$router);
         // }
         // created();
-        return{
+        return {
             handleOpen,
             handleClose,
             //handleRoute,
@@ -70,19 +82,19 @@ export default (await import('vue')).defineComponent({
             appName: state => state.app.appName,
             collapse: state => state.app.collapse,
         }),
-        mainTabs:{
-            get(){return store.state.tab.mainTabs},
-            set(val){store.commit('updateMainTabs',val)}
+        mainTabs: {
+            get() { return store.state.tab.mainTabs },
+            set(val) { store.commit('updateMainTabs', val) }
         },
-        mainTabsActiveName:{
-            get(){return store.state.tab.mainTabsActiveName},
-            set(val){store.commit('updateMainTabsActiveName',val)}
+        mainTabsActiveName: {
+            get() { return store.state.tab.mainTabsActiveName },
+            set(val) { store.commit('updateMainTabsActiveName', val) }
         }
     },
-    watch:{
+    watch: {
         //$router:"handleRoute"
     },
-   
+
 })
 </script>
 <style lang="less" scoped>
@@ -131,4 +143,5 @@ export default (await import('vue')).defineComponent({
     .menu-bar-collapse-width {
         width: 65px;
     }
-}</style>
+}
+</style>

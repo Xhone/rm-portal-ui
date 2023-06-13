@@ -18,10 +18,9 @@
 </template>
 
 <script>
-import { dataType } from "element-plus/es/components/table-v2/src/common";
+import { reactive } from 'vue';
 //import mock from '@/mock/index'
 import Cookies from "js-cookie"
-import axios from "axios";
 import http from '@/http/api'
 //import http from '@/http/http.js';
 import store from '../store/index'
@@ -52,6 +51,9 @@ export default {
             checked: true
         }
     },
+    setup(){
+       
+    },
     methods: {
         login() {
             this.loading = true
@@ -59,29 +61,9 @@ export default {
                 username: this.loginForm.username,
                 password: this.loginForm.password
             }
-            
-            
-            // axios.get('https://localhost:44311/api/User/1').then((res)=>{
-            //     if (res.message != null) {
-            //         this.$message({
-            //             message: res.message,
-            //             type: 'error'
-            //         })
-            //     } else {
-            //         alert("成功访问")
-            //         sessionStorage.setItem('user', loginInfo.username)
-            //         store.commit('menuRouteLoaded', false)//要求重新加载导航菜单
-            //         router.push('/')
-            //     }
-            //     this.loading=false;
-            // }).catch(error=>{
-            //     alert('error: '+error);
-            // })
-            
-
-          
+           
             //JSON.stringify(loginInfo)
-            http.login.login2(loginInfo).then((res) => {
+            http.login.login(loginInfo).then((res) => {
                 if (res.message != null) {
                     this.$message({
                         message: res.message,
@@ -97,7 +79,7 @@ export default {
 
                 this.loading = false
             }).catch(function (res) {
-                alert(res.message)
+                alert("Username or password is incorrect");
             })
         },
         reset() {

@@ -20,11 +20,10 @@
         </div>
         <!--主内容区域-->
         <div class="main-content">
-            <router-view>
-                <keep-alive>
-                    
-                </keep-alive>
-            </router-view>
+            <el-main>
+                <router-view/>
+            </el-main>
+            
         </div>
     </div>
 </template>
