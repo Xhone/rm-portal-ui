@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import api from '@/http/api'
 import store from '../store';
 import viewgird from './viewGird'
+import redirect from './redirect';
 //import GenMPO from '@/views/PurchaseOrder/GenMPO.vue'
 const routes = [
     {

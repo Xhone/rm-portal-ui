@@ -5,6 +5,7 @@ import * as role from './modules/role'
 import * as menu from './modules/menu' 
 import * as dict from './modules/dict' 
 import * as log from './modules/log'
+import * as mpo from './modules/mpo'
 
 export default{
     login,
@@ -13,5 +14,6 @@ export default{
     role,
     menu,
     dict,
-    log
+    log,
+    mpo
 }

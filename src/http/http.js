@@ -153,6 +153,18 @@ function get(url, param, loading, config) {
     })
 }
 
+function getRM(url,params){
+    return new Promise((resolve,reject)=>{
+        axios.get(url,params).then(res=>{
+            resolve(res.data)
+        },err=>{
+            reject(err)
+        })
+        .catch((error)=>{
+            reject(error)
+        })
+    })
+}
 //url:url地址
 //params:请求参数
 //fileName:下载的文件名

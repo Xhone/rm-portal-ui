@@ -13,7 +13,7 @@
   </div>
 </template>
 <script>
-import { Script } from "vm";
+//import { Script } from "vm";
 export default {
   props: {
     errorNumber: {

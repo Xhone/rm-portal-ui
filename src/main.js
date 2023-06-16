@@ -12,6 +12,7 @@ import ElementUI from 'element-plus'
 import 'element-plus/dist/index.css'
 import './assets/element-icon/icon.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import config from './http/config'
 const debounce=(fn,delay)=>{
     let timer=null;
     return function(){
@@ -45,5 +46,5 @@ app.config.globalProperties.$base=base
 app.use(store)
 app.use(router)
 app.use(ElementUI)
-
 app.mount('#app')
+//app.config.globalProperties.$Message=app,config.globalProperties.$message;

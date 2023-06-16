@@ -24,7 +24,7 @@
     <div style="display: flex; padding: 20px 0px 0px 0px;">
         <el-table :data="tableData" border style="width: 100%;">
             <el-table-column prop="mpoNo" label="MpoNo" width="100" />
-            <el-table-column prop="mpoDate" label="MpoDate" width="100" />
+            <el-table-column prop="mpoDate" label="MpoDate" width="100" :formatter="getTableDateFormat" />
             <el-table-column prop="mpoType" label="MpoType" width="100" />
             <el-table-column prop="attn" label="Attn" width="100" />
             <el-table-column prop="heading" label="Heading" width="100" />
@@ -42,13 +42,15 @@
 </template>
 <script>
 import { defineComponent, ref } from 'vue';
-
+import axios from 'axios'
+import http from '@/http/api'
+import { alertProps } from 'element-plus';
 export default defineComponent({
     name: 'GenMPO',
     data() {
         return {
             mpo: "测试测试测试测试测试测试",
-          
+
         }
     },
     setup() {
@@ -93,7 +95,7 @@ export default defineComponent({
                 attn: 'simons',
                 heading: 'hcw',
                 shipMode: 'sea',
-                shippment: '2018-09-01',
+                shipment: '2018-09-01',
                 supplier: 'WAFUKN',
             },
         ]);
@@ -125,16 +127,40 @@ export default defineComponent({
         getDateFormat() {
             return 'YYYY-MM-DD'
         },
+        getTableDateFormat(row) {
+            let time = new Date(row.mpoDate)
+            if (!time) {
+                return ''
+            }
+
+            let year = time.getFullYear()
+            let month = (time.getMonth() + 1) < 10 ? '0' + (time.getMonth() + 1) : (time.getMonth() + 1)
+            let day = (time.getDate() + 1) < 10 ? '0' + (time.getDate() + 1) : (time.getDate())
+            return year + '-' + month + '-' + day
+        },
         defaultDate() {
             const end = new Date()
             const start = new Date()
             start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            this.mpoDate=[start,end];
+            this.mpoDate = [start, end];
         },
         search() {
             if (this.mpoDate != '') {
                 this.mpoDate1 = this.mpoDate[0]
+                this.mpoDate2 = this.mpoDate[1]
             }
+            let params = {
+                mpo: this.mpoNo,
+                start: this.mpoDate1,
+                end: this.mpoDate2
+            }
+
+            http.mpo.getMpoHd(params).then((res) => {
+                this.tableData = res.data
+
+            }).catch((error) => {
+                alert(error.message)
+            })
 
         }
     },

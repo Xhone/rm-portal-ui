@@ -12,35 +12,34 @@
         </el-form-item>
         <el-form-item>
             <el-button type="primary" style="width:48%;" @click="reset">Reset</el-button>
-            <el-button type="primary" style="width:48%;" @click="login" :loading="loading">Sign in</el-button>
+            <el-button type="primary" style="width:48%;" @click="login" :loading="loading">Sign in</el-button><!---->
         </el-form-item>
     </el-form>
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { ref, reactive, getCurrentInstance } from 'vue';
 //import mock from '@/mock/index'
 import Cookies from "js-cookie"
 import http from '@/http/api'
 //import http from '@/http/http.js';
 import store from '../store/index'
 import router from "@/router";
-import { alertProps } from "element-plus";
 export default {
     name: 'Login',
     data() {
         return {
-            logining: false,
-           
+            loading: false,
+
             loginForm: {
                 username: 'admin',
                 password: '123456'
             },
             fieldRules: {
-                username: {
-                    required: true,
-                    message: 'please enter your account',
-                    trigger: 'blur'
+        username: {
+            required: true,
+            message: 'please enter your account',
+            trigger: 'blur'
                 },
                 password: {
                     required: true,
@@ -51,35 +50,42 @@ export default {
             checked: true
         }
     },
-    setup(){
-       
-    },
+    
     methods: {
-        login() {
+        login(){
             this.loading = true
+            
             let loginInfo = {
                 username: this.loginForm.username,
                 password: this.loginForm.password
             }
-           
+
             //JSON.stringify(loginInfo)
             http.login.login(loginInfo).then((res) => {
                 if (res.message != null) {
+                    
                     this.$message({
+                       
                         message: res.message,
                         type: 'error'
                     })
                 } else {
 
-                    //Cookies.set('token', res.data.token)//放置token到Cookie
+                    Cookies.set('token', '77ae89be36504adfb5c09ef71409ea0e'/*res.data.token*/)//放置token到Cookie
                     sessionStorage.setItem('user', loginInfo.username)
-                    store.commit('menuRouteLoaded',false)//要求重新加载导航菜单
+                    store.commit('menuRouteLoaded', false)//要求重新加载导航菜单
                     router.push('/')
                 }
 
                 this.loading = false
-            }).catch(function (res) {
-                alert("Username or password is incorrect");
+            }).catch((res)=>{
+                this.loading=false;
+                this.$message({
+                       
+                       message: res.message,
+                       type: 'error'
+                   })
+                //alert(res.message)
             })
         },
         reset() {
