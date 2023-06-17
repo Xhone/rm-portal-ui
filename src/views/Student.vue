@@ -1,6 +1,6 @@
 <script>
 export default {
-    name:Student
+    name:'Student',
 }
 </script>
 <template>

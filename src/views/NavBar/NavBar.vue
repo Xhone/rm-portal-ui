@@ -16,15 +16,20 @@
                 </template>
                 <el-menu-item index="1-1" class="el-icon-edit" @click="this.$router.push({ name: 'GenMPO' })">Gen
                     MPO</el-menu-item>
+                <el-menu-item index="1-2" @click="this.$router.push({name:'EditMpo'})">
+                    Edit Mpo
+                </el-menu-item>
 
             </el-sub-menu>
             <el-sub-menu index="2">
                 <template #title>
-                    <i class="el-icon-document"/>
+                    <i class="el-icon-document" />
                     <span>Export to RM1</span>
                 </template>
                 <el-menu-item index="2-1">
-                    <el-icon><Histogram /></el-icon>
+                    <el-icon>
+                        <Histogram />
+                    </el-icon>
                     <template #title>Packing List</template>
                 </el-menu-item>
             </el-sub-menu>

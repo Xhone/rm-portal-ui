@@ -13,6 +13,11 @@ let viewgird=[
         path:'/GenMPO',
         name:'GenMPO',
         component:()=>import('@/views/PurchaseOrder/GenMPO.vue')
+    },
+    {
+        path:'/EditMpo',
+        name:'EditMpo',
+        component:()=>import('@/views/PurchaseOrder/EditMpo.vue')
     }
 ]
 
