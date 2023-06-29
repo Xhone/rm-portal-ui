@@ -122,7 +122,7 @@ function getToken() {
 */
 function post(url, params, loading, config) {
     showLoading(loading);
-    axios.defaults.headers[_Authorization] = getToken();
+    //axios.defaults.headers[_Authorization] = getToken();
     return new Promise((resolve, reject) => {
         axios.post(url, params, config)
             .then(response => {

@@ -13,7 +13,9 @@
     <span class="navbar">
 
     </span>
-    <span class="toolbar"></span>
+    <span class="toolbar">
+      <el-button type="info" @click="logout" circle>Logout</el-button>
+    </span>
     </div>
 </template>
 <script>
@@ -38,6 +40,16 @@ export default defineComponent({
     },
     onCollapse:function(){
       this.$store.commit('onCollapse')
+    },
+    logout:function(){
+      this.$confirm("logout?","hint",{
+        type:"warning"
+      }).then(()=>{
+        sessionStorage.removeItem("user");
+        this.$router.push("/login");
+      }).catch(()=>{
+
+      });
     }
   },
   mounted(){
@@ -68,6 +80,9 @@ export default defineComponent({
 }
 .nvabar{
   float: left;
+}
+.toolbar{
+  float:right
 }
 .position-left{
   left:200px;

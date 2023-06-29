@@ -17,7 +17,9 @@ export default createStore({
         data: {},
         permission: [],
         isLoading: false,
-        userInfo: null
+        userInfo: null,
+        //GEN MPO 的数据
+        selectedData:{}
     },
     mutations: {
         setPermission(state, data) {//调用方式 this.$store.commit('setPermission', data)
@@ -39,6 +41,12 @@ export default createStore({
         },
         updateLoadingState(state,flag){
             state.isLoading=flag
+        },
+        setSelectedData(state,data){
+            state.selectedData=data;
+        },
+        clearSelectedData(state){
+            state.selectedData=null;
         }
     },
     getters:{
@@ -67,6 +75,10 @@ export default createStore({
         },
         getData:(state)=>()=>{
             return state.data;
+        },
+        
+        getSelectedData:(state)=>()=>{
+            return state.selectedData;
         }
     },
     actions:{

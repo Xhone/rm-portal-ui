@@ -3,48 +3,51 @@
         <div class="demo-date-picker">
             <label style="padding-left: 25px;">
                 <span>
-                    MpoNo
+                    TxnNo
                 </span>
-                <el-input style="width: 200px;" v-model="mpoNo" />
+                <el-input style="width: 200px;" v-model="txnNo" />
 
             </label>
 
+          
             <label style="padding-left: 25px;">
-                <span>MpoDate</span>
-                <el-date-picker v-model="mpoDate" type="daterange" unlink-panels range-separator="To"
-                    start-placeholder="Start date" end-placeholder="End date" :shortcuts="shortcuts"
-                    :value-format="getDateFormat()" />
+                <el-button @click="search">Apply</el-button>
             </label>
             <label style="padding-left: 25px;">
-                <el-button @click="search">Search</el-button>
+                <el-button @click="this.$router.push({name:'EditMpo'})">GenMPO</el-button>
             </label>
         </div>
-        <span>{{ mpoDate1 }}</span>
+      
     </div>
     <div style="display: flex; padding: 20px 0px 0px 0px;">
-        <el-table :data="tableData" border style="width: 100%;">
-            <el-table-column prop="mpoNo" label="MpoNo" width="100" />
-            <el-table-column prop="mpoDate" label="MpoDate" width="100" :formatter="getTableDateFormat" />
-            <el-table-column prop="mpoType" label="MpoType" width="100" />
-            <el-table-column prop="attn" label="Attn" width="100" />
-            <el-table-column prop="heading" label="Heading" width="100" />
-            <el-table-column prop="shipMode" label="Ship Mode" width="100" />
-            <el-table-column prop="shippment" label="Shippment" width="100" />
-            <el-table-column prop="supplier" label="Supplier" width="100" />
-            <el-table-column label="Operations">
-                <template #default="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index)">Edit</el-button>
-                    <el-button size="small" type="danger" @click="handleDelete(scope.$index)">Delete</el-button>
-                </template>
-            </el-table-column>
+        <el-table :data="tableData" height="500" border style="width: 100%;" @selection-change="handleSelectionChange">
+            <el-table-column type="selection"/>
+            <el-table-column prop="jobNo" fixed="left" label="Job No" width="90" />
+            <el-table-column prop="styleNo" label="Style No" width="100" />
+            <el-table-column prop="matCode" label="Material Code" width="120" />
+            <el-table-column prop="tempMat" label="Temp Material" width="120" />
+            <el-table-column prop="colorCode" label="Color Code" width="110" />
+            <el-table-column prop="color" label="Color" width="100" />
+            <el-table-column prop="sizes" label="Size" width="100" />
+            <el-table-column prop="mrReqQty_B" label="Req Qty"></el-table-column>
+            <el-table-column prop="mrOutsMpoQty_B" label="Oustanding MPO Qty" width="110"></el-table-column>
+            <el-table-column prop="mrNetBalQty_B" label="Net Req Bal" width="105"></el-table-column>
+            <el-table-column prop="newNetBal" label="Net Req Bal YDS" width="105"></el-table-column>
+            <el-table-column prop="suppCode" label="Vendor"></el-table-column>
+            <el-table-column prop="articleNo" label="Article No" width="100"></el-table-column>
+            <el-table-column prop="buyUnit" label="Buy Unit" width="100"></el-table-column>
+            <el-table-column prop="pxUnit" label="Price Unit" width="95"></el-table-column>
+            <el-table-column prop="uPx" label="Price"></el-table-column>
+            <el-table-column prop="description" fixed="right" label="Description" width="110"></el-table-column>
+          
         </el-table>
     </div>
 </template>
 <script>
 import { defineComponent, ref } from 'vue';
 import axios from 'axios'
+import store from '@/store/index'
 import http from '@/http/api'
-import { alertProps } from 'element-plus';
 export default defineComponent({
     name: 'GenMPO',
     data() {
@@ -54,7 +57,7 @@ export default defineComponent({
         }
     },
     setup() {
-        const mpoNo = ref('');
+        const txnNo = ref('');
         const mpoDate = ref('');
         const mpoDate1 = ref('');
         const mpoDate2 = ref('');
@@ -87,37 +90,112 @@ export default defineComponent({
                 },
             },
         ];
-        const tableData = ref([
+        var tableData = ref([
             {
-                mpoNo: 'fb24-5480',
-                mpoDate: '2018-08-05',
-                mpoType: '',
-                attn: 'simons',
-                heading: 'hcw',
-                shipMode: 'sea',
-                shipment: '2018-09-01',
-                supplier: 'WAFUKN',
+                jobNo: '',
+                styleNo: '',
+                matCode: '',
+                tempMat: '',
+                colorCode: '',
+                color: '',
+                sizes: '',
+                mrReqQty_B:0,
+                mrOutsMpoQty_B:0,
+                mrNetBalQty_B:0,
+                newNetBal:0,
+                suppCode:'',
+                articleNo:'',
+                buyUnit:'',
+                pxUnit:'',
+                uPx:0,
+                description:'',
+                ccy:'',
+                rate:0,
+                measUnit:'',
+                buyUnitFactor:'',
+                pxUnitFactor:0.0,
+                IssueUnit:'',
+                IssueUnitFactor:0.0,
+                width1:'',
+                weight:'',
+                matDesc:'',
+                scHeading:'',
+                widthUnit:'',
+                suppName:''
             },
         ]);
-        function handleEdit(index) {
-            alert(index)
-        }
-        // const handleEdit = (index) => {
 
-        // }
-        const handleDelete = (index) => {
+        var selectedData = ref([
+            {
+                jobNo: '',
+                styleNo: '',
+                matCode: '',
+                tempMat: '',
+                colorCode: '',
+                color: '',
+                sizes: '',
+                mrReqQty_B:0,
+                mrOutsMpoQty_B:0,
+                mrNetBalQty_B:0,
+                newNetBal:0,
+                suppCode:'',
+                articleNo:'',
+                buyUnit:'',
+                pxUnit:'',
+                uPx:0,
+                description:'',
+                ccy:'',
+                rate:0,
+                measUnit:'',
+                buyUnitFactor:'',
+                pxUnitFactor:0.0,
+                IssueUnit:'',
+                IssueUnitFactor:0.0,
+                width1:'',
+                weight:'',
+                matDesc:'',
+                scHeading:'',
+                widthUnit:'',
+                suppName:''
+            },
+        ]);
+
+
+        function handleEdit() {
+          
+        }
+       
+        const handleDelete = function(index) {
 
         }
+
+        function handleSelectionChange(selection){
+            selectedData=selection;
+            store.commit('setSelectedData', selection);
+            for(let d of selectedData){
+                console.log(d["jobNo"]);
+                console.log(d["matCode"]);
+            }
+            
+        }
+
+    
+
         return {
-            mpoNo,
+            txnNo,
             mpoDate,
             mpoDate1,
             mpoDate2,
             shortcuts,
             tableData,
+            selectedData,
             handleEdit,
             handleDelete,
+            handleSelectionChange,
         }
+
+    },
+    props:{
 
     },
     methods: {
@@ -145,18 +223,16 @@ export default defineComponent({
             this.mpoDate = [start, end];
         },
         search() {
-            if (this.mpoDate != '') {
-                this.mpoDate1 = this.mpoDate[0]
-                this.mpoDate2 = this.mpoDate[1]
-            }
+            
             let params = {
-                mpo: this.mpoNo,
-                start: this.mpoDate1,
-                end: this.mpoDate2
+                jobNo: this.txnNo,
+               
             }
 
-            http.mpo.getMpoHd(params).then((res) => {
-                this.tableData = res.data
+            http.mpo.getMpoView(params).then((res) => {
+                this.tableData = res.data;
+               
+                console.log(this.tableData);
 
             }).catch((error) => {
                 alert(error.message)

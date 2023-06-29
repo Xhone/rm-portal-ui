@@ -9,7 +9,7 @@
 </template>
 <script>
 import { ElConfigProvider } from "element-plus";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
+//import zhCn from "element-plus/lib/locale/lang/zh-cn";
 export default {
   name: 'rm-portal',
   components: {
@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      locale: zhCn
+      //locale: zhCn
     }
   }
 }

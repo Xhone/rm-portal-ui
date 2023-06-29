@@ -36,10 +36,10 @@ export default {
                 password: '123456'
             },
             fieldRules: {
-        username: {
-            required: true,
-            message: 'please enter your account',
-            trigger: 'blur'
+                username: {
+                    required: true,
+                    message: 'please enter your account',
+                    trigger: 'blur'
                 },
                 password: {
                     required: true,
@@ -50,11 +50,11 @@ export default {
             checked: true
         }
     },
-    
+
     methods: {
-        login(){
+        login() {
             this.loading = true
-            
+
             let loginInfo = {
                 username: this.loginForm.username,
                 password: this.loginForm.password
@@ -63,28 +63,29 @@ export default {
             //JSON.stringify(loginInfo)
             http.login.login(loginInfo).then((res) => {
                 if (res.message != null) {
-                    
+
                     this.$message({
-                       
+
                         message: res.message,
                         type: 'error'
                     })
                 } else {
 
-                    Cookies.set('token', '77ae89be36504adfb5c09ef71409ea0e'/*res.data.token*/)//放置token到Cookie
-                    sessionStorage.setItem('user', loginInfo.username)
+                    //Cookies.set('token', '77ae89be36504adfb5c09ef71409ea0e'/*res.data.token*/)//放置token到Cookie
+                    sessionStorage.setItem('user', loginInfo.username);
+                    store.commit("setUserInfo",loginInfo.username);
                     store.commit('menuRouteLoaded', false)//要求重新加载导航菜单
                     router.push('/')
                 }
 
                 this.loading = false
-            }).catch((res)=>{
-                this.loading=false;
+            }).catch((res) => {
+                this.loading = false;
                 this.$message({
-                       
-                       message: res.message,
-                       type: 'error'
-                   })
+
+                    message: res.message,
+                    type: 'error'
+                })
                 //alert(res.message)
             })
         },

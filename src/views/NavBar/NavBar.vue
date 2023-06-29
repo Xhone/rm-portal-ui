@@ -14,12 +14,15 @@
                     <i class="el-icon-edit"></i>
                     <span>Purchase Order</span>
                 </template>
-                <el-menu-item index="1-1" class="el-icon-edit" @click="this.$router.push({ name: 'GenMPO' })">Gen
-                    MPO</el-menu-item>
+                <el-menu-item index="1-1" @click="this.$router.push({ name: 'GenMPO' })">
+                    GenMPO
+                </el-menu-item>
                 <el-menu-item index="1-2" @click="this.$router.push({name:'EditMpo'})">
                     Edit Mpo
                 </el-menu-item>
-
+                <el-menu-item index="1-3" @click="this.$router.push({name:'SearchMpo'})">
+                    Search Mpo
+                </el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="2">
                 <template #title>
@@ -33,12 +36,12 @@
                     <template #title>Packing List</template>
                 </el-menu-item>
             </el-sub-menu>
-            <el-sub-menu index="3" disabled>
+            <el-sub-menu index="3">
                 <template #title>
                     <i class="el-icon-setting"></i>
                     <span>Setting</span>
                 </template>
-                <el-menu-item index="3-1" class="el-icon-user">用户管理</el-menu-item>
+                <el-menu-item index="3-1" class="el-icon-user" @click="this.$router.push('user')">用户管理</el-menu-item>
                 <el-menu-item index="3-2" class="el-icon-menu" @click="$router.push('menu')">菜单管理</el-menu-item>
             </el-sub-menu>
         </el-menu>

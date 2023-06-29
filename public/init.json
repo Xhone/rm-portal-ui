@@ -1,0 +1,7 @@
+{
+    "heading":["CWL","HCW","HW"],
+    "lighting":["CTD","CTA","CLOSING"],
+    "status":["Open","Cancel","Complete"],
+    "currency":["RMB","USD"],
+    "mpoType":["BUY TO ORDER","PROVIDED BY CLIENT","DEFECT REPLACEMENT","ADDITIONAL PURCHASE","PURCHASE CALICO"]
+}

@@ -1,9 +1,9 @@
 let viewgird=[
-    // {
-    //     path:'/user',
-    //     name:'user',
-    //     component:()=>import('@/views/sys/User.vue')
-    // },
+    {
+        path:'/user',
+        name:'user',
+        component:()=>import('@/views/sys/User.vue')
+    },
     {
         path:'/menu',
         name:'menu',
@@ -18,6 +18,10 @@ let viewgird=[
         path:'/EditMpo',
         name:'EditMpo',
         component:()=>import('@/views/PurchaseOrder/EditMpo.vue')
+    },{
+        path:'/SearchMpo',
+        name:'SearchMpo',
+        component:()=>import('@/views/PurchaseOrder/SearchMpo.vue')
     }
 ]
 
