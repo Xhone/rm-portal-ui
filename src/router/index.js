@@ -3,7 +3,7 @@ import api from '@/http/api'
 import store from '../store';
 import viewgird from './viewGird'
 import redirect from './redirect';
-//import GenMPO from '@/views/PurchaseOrder/GenMPO.vue'
+
 const routes = [
     {
         path: '/',
@@ -11,7 +11,8 @@ const routes = [
         component: () => import('@/views/Home.vue'),
         children: [
             ...viewgird,
-             //{ path: '/GenMPO', name: 'GenMPO', component:GenMPO },
+            ...redirect,
+        
           
         ]
     },
@@ -20,11 +21,7 @@ const routes = [
         name: 'login',
         component: () => import('@/views/Login.vue')
     },
-    {
-        path: '/404',
-        name: 'notFound',
-        component: () => { return import('@/views/404.vue') }
-    },
+   
    
 ];
 

@@ -6,12 +6,14 @@
                 @tab-remove="removeTabHandle">
                 <el-dropdown class="tabs-tools" :show-timeout="0" trigger="hover">
                     <div style="font-size: 20px;width: 50px;"><i class="el-icon-arrow-down"></i></div>
+
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="tabsCloseCurrentHandle">close current tab</el-dropdown-item>
                         <el-dropdown-item @click.native="tabsCloseOtherHandle">close other tab</el-dropdown-item>
                         <el-dropdown-item @click.native="tabsCloseAllHandle">close all tab</el-dropdown-item>
                         <el-dropdown-item @click.native="tabsRefreshCurrentHandle">refresh</el-dropdown-item>
                     </el-dropdown-menu>
+
                 </el-dropdown>
                 <el-tab-pane v-for="item in mainTabs" :key="item.name" :label="item.title" :name="item.name">
                     <span slot="label"><i :class="item.icon" />{{ item.title }}</span>
@@ -21,9 +23,17 @@
         <!--主内容区域-->
         <div class="main-content">
             <el-main>
-                <router-view/>
+                <!-- <router-view/> -->
+                <router-view v-slot="{ Component }">
+                    <keep-alive>
+                        <component :is="Component" :key="$route.name"
+                            v-if="!$route.meta || ($route.meta && !$route.meta.hasOwnProperty('keepAlive'))" />
+                    </keep-alive>
+                    <component :is="Component" :key="$route.name"
+                        v-if="$route.meta && $route.meta.hasOwnProperty('keepAlive')" />
+                </router-view>
             </el-main>
-            
+
         </div>
     </div>
 </template>

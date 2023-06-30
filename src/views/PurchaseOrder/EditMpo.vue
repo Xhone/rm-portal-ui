@@ -323,12 +323,12 @@
 import { ref, reactive } from 'vue';
 import axios from 'axios'
 import store from '@/store/index'
-import http from '@/http/http'
+import http from '@/http/api'
 import { getChildState } from 'element-plus/es/components/tree/src/model/node';
 export default (await import('vue')).defineComponent({
     name: 'EditMpo',
     setup() {
-        console.log(store.state.selectedData.length);
+        //console.log(store.state.selectedData.length);
 
         const mpoForm = reactive({
             mpoNo: '',

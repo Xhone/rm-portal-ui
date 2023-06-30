@@ -231,8 +231,7 @@ export default defineComponent({
 
             http.mpo.getMpoView(params).then((res) => {
                 this.tableData = res.data;
-               
-                console.log(this.tableData);
+            
 
             }).catch((error) => {
                 alert(error.message)

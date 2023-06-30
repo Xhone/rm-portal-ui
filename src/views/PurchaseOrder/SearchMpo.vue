@@ -19,7 +19,7 @@
                 <el-button @click="search">Search</el-button>
             </label>
         </div>
-        <span>{{ mpoDate1 }}</span>
+      
     </div>
     <div style="display: flex; padding: 20px 0px 0px 0px;">
         <el-table :data="tableData" border style="width: 100%;">
@@ -42,7 +42,6 @@
 </template>
 <script>
 import { defineComponent, ref } from 'vue';
-import axios from 'axios'
 import http from '@/http/api'
 import { alertProps } from 'element-plus';
 export default defineComponent({
@@ -87,7 +86,7 @@ export default defineComponent({
                 },
             },
         ];
-        const tableData = ref([
+        var tableData = ref([
             {
                 mpoNo: 'fb24-5480',
                 mpoDate: '2018-08-05',
@@ -142,13 +141,16 @@ export default defineComponent({
             const end = new Date()
             const start = new Date()
             start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            this.mpoDate = [start, end];
+            this.mpoDate = [start,end];
+        
+           
         },
         search() {
             if (this.mpoDate != '') {
                 this.mpoDate1 = this.mpoDate[0]
                 this.mpoDate2 = this.mpoDate[1]
             }
+           
             let params = {
                 mpo: this.mpoNo,
                 start: this.mpoDate1,
@@ -157,15 +159,15 @@ export default defineComponent({
 
             http.mpo.getMpoHd(params).then((res) => {
                 this.tableData = res.data
-
+                
             }).catch((error) => {
-                alert(error.message)
+                this.$message({ message: 'failed request, ' + error, type: 'error' })
             })
 
         }
     },
     mounted() {
-
+        this.defaultDate();
     },
 })
 </script>

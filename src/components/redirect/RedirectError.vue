@@ -32,7 +32,7 @@ export default {
   methods: {
     backHome: function () {
       this.$router.push({
-        path: "/home",
+        path: "/",
       });
     },
   },

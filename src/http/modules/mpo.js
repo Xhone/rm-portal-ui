@@ -16,11 +16,11 @@ export const getMpoView=(params)=>{
     })
 }
 
-export const saveMpo=(params)=>{
+export const saveMpo=(data)=>{
     return axios({
         url:'api/Mpo/Save',
         method:'post',
-        params:params,
+        data:data,
         
     })
 }

@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="loginForm" :rules="fieldRules" ref="loginForm" label-position="left" label-width="auto"
+    <el-form :model="loginForm" :rules="fieldRules" ref="loginForm" label-position="left" 
         class="demo-ruleForm login-container">
         <img alt="rmportal logo" src="../assets/logo.gif">
         <h2 class="title" style="padding-left:22px;">Sign in to RMPortal</h2>
@@ -71,7 +71,7 @@ export default {
                     })
                 } else {
 
-                    //Cookies.set('token', '77ae89be36504adfb5c09ef71409ea0e'/*res.data.token*/)//放置token到Cookie
+                    Cookies.set('token', '77ae89be36504adfb5c09ef71409ea0e'/*res.data.token*/)//放置token到Cookie
                     sessionStorage.setItem('user', loginInfo.username);
                     store.commit("setUserInfo",loginInfo.username);
                     store.commit('menuRouteLoaded', false)//要求重新加载导航菜单

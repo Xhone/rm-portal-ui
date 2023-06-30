@@ -27,8 +27,8 @@
             <el-table-column label="Email" prop="email"></el-table-column>
             <el-table-column label="Operation">
                 <template #default="scope">
-                    <el-button size="small" type="primary" @click="handleEdit(scope.$index)">Edit</el-button>
-                    <el-button size="small" type="danger" @click="handleDelete(scope.$index)">Delete</el-button>
+                    <el-button size="small" type="primary" @click="handleEdit(scope.row)">Edit</el-button>
+                    <el-button size="small" type="danger" @click="handleDelete(scope.row)">Delete</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -67,6 +67,7 @@
 import http from '@/http/api'
 import store from '@/store'
 import { format } from "@/util/datetime"
+import axios from 'axios'
 import { defineComponent, ref } from 'vue'
 export default defineComponent({
     name: 'user',
@@ -97,7 +98,6 @@ export default defineComponent({
     data() {
         return {
             size: 'normal',
-
 
             showBatchDelete: true,
             showOperation: true,
@@ -160,6 +160,8 @@ export default defineComponent({
             let params = {
                 userName: this.filters.name
             }
+
+
             http.user.getUser(params).then((res) => {
                 this.userData = res.data;
 
@@ -169,7 +171,29 @@ export default defineComponent({
             })
         },
 
-        handleDelete: function (index) {
+        handleDelete: function (row) {
+
+            let params = { id: row["id"] };
+
+            http.user.deleteUser(params).then((res) => {
+
+                http.user.getAll().then((res) => {
+                    this.userData = res.data
+                })
+
+                this.$message({ message: '操作成功', type: 'success' })
+            }).catch((error) => {
+                this.$message({ message: '操作失败, ' + error, type: 'error' })
+            })
+
+
+            return;
+            axios.delete('https:/localhost:44311/api/User/Delete', { params: { id: 22 } }).then((res) => {
+
+            }).catch((error) => {
+                this.$message({ message: '操作失败, ' + error, type: 'error' })
+            })
+
 
         },
         // 显示新增界面
@@ -186,21 +210,18 @@ export default defineComponent({
                 ntid: '',
                 tel: "",
                 email: '',
-                createBy: store.state.userInfo,
+                createBy: '',
                 createDate: new Date()
 
             }
+
         },
         // 显示编辑界面
         handleEdit: function (params) {
             this.dialogVisible = true
             this.operation = false
-            this.dataForm = Object.assign({}, params.row)
-            let userRoles = []
-            for (let i = 0, len = params.row.userRoles.length; i < len; i++) {
-                userRoles.push(params.row.userRoles[i].roleId)
-            }
-            this.dataForm.userRoles = userRoles
+            this.dataForm = Object.assign({}, params)
+
         },
         // 编辑
         submitForm: function () {
@@ -208,7 +229,8 @@ export default defineComponent({
                 if (valid) {
                     this.$confirm('确认提交吗？', '提示', {}).then(() => {
                         //this.editLoading = true
-                        let params = {
+                        let data = {
+                            
                             userName: this.dataForm.userName,
                             password: this.dataForm.password,
                             detpId: this.dataForm.detpId,
@@ -217,22 +239,50 @@ export default defineComponent({
                             ntid: '',
                             tel: this.dataForm.tel,
                             email: this.dataForm.email,
-                            createBy: this.dataForm.createBy,
+                            createBy: store.state.userInfo,
                             createDate: this.dataForm.createDate
                         }
 
-                        http.user.save(params).then((res) => {
-                            //this.editLoading = false
-                            console.log(res.code);
-                            if (res.code == 200) {
-                                this.$message({ message: '操作成功', type: 'success' })
-                                this.dialogVisible = false
-                                this.$refs['dataForm'].resetFields()
-                            } else {
-                                this.$message({ message: '操作失败, ' + res.msg, type: 'error' })
-                            }
-                            //this.findPage(null)
-                        })
+                        if (this.operation) {
+                            http.user.save(data).then((res) => {
+                                //this.editLoading = false
+
+
+                                if (res.data == 200) {
+
+                                    http.user.getAll().then((res) => {
+                                        this.userData = res.data
+                                    })
+
+                                    this.$message({ message: '操作成功', type: 'success' })
+                                    this.dialogVisible = false
+                                    this.$refs['dataForm'].resetFields()
+                                } else {
+                                    this.$message({ message: '操作失败, ' + res.msg, type: 'error' })
+                                }
+                                //this.findPage(null)
+                            })
+                        } else {
+                            http.user.putUser(this.dataForm).then((res) => {
+                                //this.editLoading = false
+
+
+                                if (res.data == 200) {
+
+                                    http.user.getAll().then((res) => {
+                                        this.userData = res.data
+                                    })
+
+                                    this.$message({ message: '操作成功', type: 'success' })
+                                    this.dialogVisible = false
+                                    this.$refs['dataForm'].resetFields()
+                                } else {
+                                    this.$message({ message: '操作失败, ' + res.msg, type: 'error' })
+                                }
+                              
+                            })
+                        }
+
                     })
                 }
             })
