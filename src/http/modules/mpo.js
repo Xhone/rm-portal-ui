@@ -24,3 +24,18 @@ export const saveMpo=(data)=>{
         
     })
 }
+
+export const getJobData=()=>{
+    return axios({
+        url:'api/SGS/GetJobOrder',
+        method:'get',
+    })
+}
+
+export const getJobDataByFilter=(data)=>{
+    return axios({
+        url:'api/SGS/GetJobOrderByFilter',
+        method:'get',
+        params:data,
+    })
+}

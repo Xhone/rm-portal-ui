@@ -2,18 +2,34 @@
   <div id="app">
    
     <el-config-provider :locale="locale">
-      <router-view />
+      <router-view v-if="isRouterAlive" />
     </el-config-provider>
 
   </div>
 </template>
 <script>
+import {getCurrentInstance, provide, ref} from 'vue'
 import { ElConfigProvider } from "element-plus";
 //import zhCn from "element-plus/lib/locale/lang/zh-cn";
 export default {
   name: 'rm-portal',
   components: {
     [ElConfigProvider.name]: ElConfigProvider,//添加组件
+  },
+  setup(props,context){
+    const {proxy}=getCurrentInstance();
+    const isRouterAlive=ref(true);
+    const reload=()=>{
+      isRouterAlive.value=false;
+      proxy.$nextTick(()=>{
+        isRouterAlive.value=true;
+      })
+    }
+    provide('reload',reload);
+    return{
+      isRouterAlive,
+      reload
+    }
   },
   data() {
     return {

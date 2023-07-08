@@ -46,12 +46,14 @@
                 <el-form-item label="Password" prop="password">
                     <el-input v-model="dataForm.password" type="password" auto-complete="off"></el-input>
                 </el-form-item>
-
+                <el-form-item label="NTID" prop="ntid">
+                    <el-input v-model="dataForm.ntid" auto-complete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="Email" prop="email">
                     <el-input v-model="dataForm.email" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="Telephone" prop="telephone">
-                    <el-input v-model="dataForm.telephone" auto-complete="off"></el-input>
+                <el-form-item label="Telephone" prop="tel">
+                    <el-input v-model="dataForm.tel" auto-complete="off"></el-input>
                 </el-form-item>
 
             </el-form>
@@ -111,7 +113,9 @@ export default defineComponent({
             editLoading: false,
             dataFormRules: {
                 userName:
-                    { required: true, message: 'please enter userName', trigger: 'blur' }
+                    { required: true, message: 'please enter userName', trigger: 'blur' },
+                password: { required: true, message: 'please enter password', trigger: 'blur' },
+                ntid: { required: true, message: 'please enter NTID', trigger: 'blur' },
 
             },
             // 新增编辑界面数据
@@ -126,7 +130,9 @@ export default defineComponent({
                 tel: "",
                 email: '',
                 createBy: '',
-                createDate: ''
+                createDate: '',
+                modifier:'',
+                modifyDate:''
             },
             deptData: [],
             deptTreeProps: {
@@ -137,24 +143,6 @@ export default defineComponent({
         }
     },
     methods: {
-        // 获取分页数据
-        findPage: function (data) {
-            if (data !== null) {
-                this.pageRequest = data.pageRequest
-            }
-            this.pageRequest.columnFilters = { name: { name: 'name', value: this.filters.name } }
-            this.$api.user.findPage(this.pageRequest).then((res) => {
-                this.pageResult = res.data
-                this.findUserRoles()
-            }).then(data != null ? data.callback : '')
-        },
-        // 加载用户角色信息
-        findUserRoles: function () {
-            this.$api.role.findAll().then((res) => {
-                // 加载角色集合
-                this.roles = res.data
-            })
-        },
 
         search: function () {
             let params = {
@@ -229,21 +217,24 @@ export default defineComponent({
                 if (valid) {
                     this.$confirm('确认提交吗？', '提示', {}).then(() => {
                         //this.editLoading = true
-                        let data = {
-                            
-                            userName: this.dataForm.userName,
-                            password: this.dataForm.password,
-                            detpId: this.dataForm.detpId,
-                            title: this.dataForm.title,
-                            level: this.dataForm.level,
-                            ntid: '',
-                            tel: this.dataForm.tel,
-                            email: this.dataForm.email,
-                            createBy: store.state.userInfo,
-                            createDate: this.dataForm.createDate
-                        }
+
 
                         if (this.operation) {
+                            let data = {
+
+                                userName: this.dataForm.userName,
+                                password: this.dataForm.password,
+                                detpId: this.dataForm.detpId,
+                                title: this.dataForm.title,
+                                level: this.dataForm.level,
+                                ntid: this.dataForm.ntid,
+                                tel: this.dataForm.tel,
+                                email: this.dataForm.email,
+                                createBy: store.state.userInfo,
+                                createDate: this.dataForm.createDate,
+                                modifier:'',
+                                modifyDate:null,
+                            }
                             http.user.save(data).then((res) => {
                                 //this.editLoading = false
 
@@ -263,7 +254,22 @@ export default defineComponent({
                                 //this.findPage(null)
                             })
                         } else {
-                            http.user.putUser(this.dataForm).then((res) => {
+                            let data = {
+                                id:this.dataForm.id,
+                                userName: this.dataForm.userName,
+                                password: this.dataForm.password,
+                                detpId: this.dataForm.detpId,
+                                title: this.dataForm.title,
+                                level: this.dataForm.level,
+                                ntid: this.dataForm.ntid,
+                                tel: this.dataForm.tel,
+                                email: this.dataForm.email,
+                                createBy:this.dataForm.createBy,
+                                createDate:this.dataForm.createDate,
+                                modifier: store.state.userInfo,
+                                modifyDate: new Date()
+                            }
+                            http.user.putUser(data).then((res) => {
                                 //this.editLoading = false
 
 
@@ -279,7 +285,7 @@ export default defineComponent({
                                 } else {
                                     this.$message({ message: '操作失败, ' + res.msg, type: 'error' })
                                 }
-                              
+
                             })
                         }
 
@@ -287,30 +293,12 @@ export default defineComponent({
                 }
             })
         },
-        // 获取部门列表
-        findDeptTree: function () {
-            this.$api.dept.findDeptTree().then((res) => {
-                this.deptData = res.data
-            })
-        },
-        // 菜单树选中
-        deptTreeCurrentChangeHandle(data, node) {
-            this.dataForm.deptId = data.id
-            this.dataForm.deptName = data.name
-        },
+
         // 时间格式化
         dateFormat: function (row, column, cellValue, index) {
             return format(row[column.property])
         },
-        // 处理表格列过滤显示
-        displayFilterColumnsDialog: function () {
-            this.$refs.tableColumnFilterDialog.setDialogVisible(true)
-        },
-        // 处理表格列过滤显示
-        handleFilterColumns: function (data) {
-            this.filterColumns = data.filterColumns
-            this.$refs.tableColumnFilterDialog.setDialogVisible(false)
-        },
+
         // 处理表格列过滤显示
         initColumns: function () {
             this.columns = [
@@ -331,6 +319,11 @@ export default defineComponent({
     mounted() {
         //this.findDeptTree()
         //this.initColumns()
+        http.user.getAll().then((res) => {
+            this.userData = res.data;
+        }).catch((error) => {
+
+        })
     }
 }) 
 </script>

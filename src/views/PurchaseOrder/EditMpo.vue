@@ -1,9 +1,10 @@
 <template>
-    <div style="position: absolute;">
-        <el-form :model="mpoForm" label-width="120px" class="demo-ruleForm">
+    <div>
+        <el-form ref="mpoFormRef" :model="mpoForm" :rules="dataFormRules" style="padding: 0px 20px 0px 0px;"
+            class="demo-ruleForm">
             <el-row>
                 <el-col :span="8">
-                    <el-form-item label="Mpo No">
+                    <el-form-item label="Mpo No" prop="mpoNo">
                         <el-input v-model="mpoForm.mpoNo" style="width: 210px;" />
                     </el-form-item>
                 </el-col>
@@ -13,8 +14,8 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="Attn">
-                        <el-input v-model="mpoForm.attn" style="width: 210px;" />
+                    <el-form-item label="Incharge">
+                        <el-input v-model="mpoForm.incharge" style="width: 210px;" />
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -33,7 +34,7 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="Ship Mode">
-                        <el-select v-model="mpoForm.shipMode">
+                        <el-select v-model="mpoForm.shipMode" style="width: 210px;">
                             <el-option v-for="item in shipModes" :value="item" />
                         </el-select>
                     </el-form-item>
@@ -47,31 +48,39 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="4">
                     <el-form-item label="Shipment">
                         <el-date-picker v-model="mpoForm.shipmentDate" />
                     </el-form-item>
-                </el-col>
-                <el-col :span="3">
 
+                </el-col>
+                <el-col :span="4">
                     <el-select v-model="mpoForm.lighting">
                         <el-option v-for="item in lightings" :value="item" />
                     </el-select>
+
 
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="Shipped To">
                         <el-select v-model="mpoForm.shippedTo">
-
+                            <el-option v-for="(item, index) in shippeds" :value="item.suppCode" />
                         </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="4">
-                    <el-form-item label="Supplier" class="grid-content ep-bg-purple">
+                    <el-form-item label="Supplier" prop="supplier" class="grid-content ep-bg-purple">
 
-                        <el-select v-model="mpoForm.supplier"></el-select>
+                        <el-select v-model="mpoForm.supplier">
+                            <el-option v-for="(item, index) in suppliers" :key="item.suppCode" :value="item.suppCode">
+
+                                <el-button text="true" style="width: 100%;" @click="getsuppEngName(index)">{{ item.suppCode
+                                }}</el-button>
+                            </el-option>
+
+                        </el-select>
 
 
                     </el-form-item>
@@ -83,16 +92,20 @@
 
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="Incharge">
-                        <el-select v-model="mpoForm.incharge"></el-select>
+                    <el-form-item label="Attn">
+                        <el-input v-model="mpoForm.attn" style="width: 210px;" />
                     </el-form-item>
                 </el-col>
+
             </el-row>
             <el-row>
                 <el-col :span="4">
                     <el-form-item label="Currency">
                         <el-select v-model="mpoForm.currency">
-                            <el-option v-for="item in ccys" :value="item.value" />
+                            <el-option v-for="(item, index) in currencies" :value="item.ccy">
+                                <el-button text="true" style="width:100%;" @click="getRate(index)">{{ item.ccy
+                                }}</el-button>
+                            </el-option>
                         </el-select>
 
                     </el-form-item>
@@ -114,20 +127,25 @@
                 </el-col>
             </el-row>
             <el-form-item label="Terms">
-                <el-select v-model="mpoForm.terms"></el-select>
+                <el-select v-model="mpoForm.terms">
+                    <el-option v-for="item in terms" :value="item" />
+                </el-select>
             </el-form-item>
             <el-form-item label="Payment">
-                <el-select v-model="mpoForm.payment"></el-select>
+                <el-select v-model="mpoForm.payment">
+                    <el-option v-for="item in payments" :value="item" />
+                </el-select>
             </el-form-item>
             <el-form-item label="DeliveryAddress">
                 <el-input v-model="mpoForm.deliveryAddress" />
             </el-form-item>
             <el-row>
-                <el-col :span="24">
+                <el-col :span="3">
                     <el-form-item label="OverRecvAllowance">
                         <el-input v-model="mpoForm.allowPurchase" />
                     </el-form-item>
                 </el-col>
+
             </el-row>
             <el-form-item label="OverQty">
                 <el-radio-group v-model="mpoForm.overQtyType">
@@ -156,10 +174,8 @@
             <el-form-item label="JobNo:">
                 <el-input v-model="mpoForm.jobNo" type="textarea" />
             </el-form-item>
-            <el-form-item label="Remark">
-                <el-input v-model="mpoForm.remark" type="textarea" />
-            </el-form-item>
-            <el-form-item>
+
+            <el-form-item label="Detail">
                 <el-table :data="mpoForm.mpoDetail" :row-class-name="tableRowClassName" border style="width: 100%;"
                     @cell-click="tabClick">
 
@@ -312,6 +328,53 @@
                 </el-table>
                 <el-button class="mt-4" style="width: 100%;" @click="addRow">Add Item</el-button>
             </el-form-item>
+            <el-form-item label="Surcharge">
+                <el-table :data="mpoForm.mpoSurcharge" :row-class-name="surchargeTableRowClassName"
+                    @cell-click="surchargeTabClick" border style="width: 100%;">
+                    <el-table-column prop="surType" label="SurType">
+                        <template #default="scope">
+                            <span v-if="scope.row.index === tabSurchargeClickIndex && tabSurchargeClickLabel === 'SurType'">
+                                <el-select v-model="scope.row.surType" size="mini">
+                                    <el-option v-for="(item, index) in surcharges" :value="item.surType">
+                                        <el-button text="true" style="width:100%;"
+                                            @click="getSurDescription(scope.row.index, index)">{{ item.surType
+                                            }}</el-button>
+                                    </el-option>
+                                </el-select>
+                            </span>
+                            <span v-else>{{ scope.row.surType }}</span>
+                        </template>
+
+                    </el-table-column>
+                    <el-table-column prop="surDescription" label="SurDescription">
+
+                    </el-table-column>
+                    <el-table-column prop="surPercent" label="SurPercent">
+                        <template #default="scope">
+                            <span
+                                v-if="scope.row.index === tabSurchargeClickIndex && tabSurchargeClickLabel === 'SurPercent'">
+                                <el-input v-model="scope.row.surPercent" placeholder="please input quantity" size="mini"
+                                    @blue="inputSurchargeBlur" />
+                            </span>
+                            <span v-else>{{ scope.row.surPercent }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="surAmount" label="SurAmount">
+                        <template #default="scope">
+                            <span
+                                v-if="scope.row.index === tabSurchargeClickIndex && tabSurchargeClickLabel === 'SurAmount'">
+                                <el-input v-model="scope.row.surAmount" placeholder="please input quantity" size="mini"
+                                    @blue="inputSurchargeBlur" />
+                            </span>
+                            <span v-else>{{ scope.row.surAmount }}</span>
+                        </template>
+                    </el-table-column>
+
+                </el-table>
+            </el-form-item>
+            <el-form-item label="Remark">
+                <el-input v-model="mpoForm.remark" type="textarea" />
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSave">Save</el-button>
                 <el-button @click="onDelete">Delete</el-button>
@@ -320,15 +383,16 @@
     </div>
 </template>
 <script>
-import { ref, reactive } from 'vue';
+import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
 import axios from 'axios'
 import store from '@/store/index'
 import http from '@/http/api'
-import { getChildState } from 'element-plus/es/components/tree/src/model/node';
+
 export default (await import('vue')).defineComponent({
     name: 'EditMpo',
-    setup() {
-        //console.log(store.state.selectedData.length);
+    setup(props, context) {
+        // 获取全局属性和方法
+        const { proxy, ctx } = getCurrentInstance();
 
         const mpoForm = reactive({
             mpoNo: '',
@@ -343,7 +407,7 @@ export default (await import('vue')).defineComponent({
             shippedTo: '',
             supplier: '',
             suppEngName: '',
-            incharge: '',
+            incharge: store.state.userInfo,
             currency: '',
             rate: 0.0,
             status: 'Open',
@@ -357,8 +421,13 @@ export default (await import('vue')).defineComponent({
             revision: 0,
             jobNo: '',
             remark: '',
-            mpoDetail: []
+            mpoDetail: [],
+            mpoSurcharge: [{ "surType": "", "surDescription": "", "surPercent": 0, "surAmount": 0 }]
         });
+
+        const mpoFormRef = ref(mpoForm);
+
+        const suppliers = ref([]);
         const count = ref(1);
         const mpoTypes = ref(["BUY TO ORDER", "PROVIDED BY CLIENT", "DEFECT REPLACEMENT", "ADDITIONAL PURCHASE", "PURCHASE CALICO"])
         const lightings = ref(["ETD", "ETA", "CLOSING"]);
@@ -395,51 +464,195 @@ export default (await import('vue')).defineComponent({
                 "FEDEX", "UPS", "COUR", "AIR CC",
                 "HC", "UEC", "PAIR"
             ]);
-        function onSave() {
+
+        const terms = ref([]);
+
+        const payments = ref([]);
+
+        const currencies = ref([]);
+
+        const shippeds = ref([]);
+
+        const surcharges = ref([]);
+
+        if (store.state.selectedData.length > 0) {
+            //console.log(store.state.userInfo);
+            mpoForm.incharge = store.state.userInfo;
+            mpoForm.heading = store.state.selectedData[0]["scHeading"];
+            mpoForm.shipmentDate = new Date();
+            mpoForm.supplier = store.state.selectedData[0]["suppCode"];
+            mpoForm.suppEngName = store.state.selectedData[0]["suppName"];
+            mpoForm.currency = store.state.selectedData[0]["ccy"];
+            mpoForm.rate = store.state.selectedData[0]["rate"];
+            mpoForm.jobNo = store.state.selectedData[0]["jobNo"];
+
+            http.dtrade.getSumPoData(store.state.selectedData).then((res) => {
 
 
-            let txMpoHd = {
-                mpoNo: mpoForm.mpoNo,
-                mpoType: mpoForm.mpoType,
-                revision: mpoForm.revision,
-                mpoDate: mpoForm.mpoDate,
-                heading: mpoForm.heading,
-                suppCode: mpoForm.supplier,
-                terms: mpoForm.terms,
-                deliAdd: mpoForm.deliveryAddress,
-                shipDate: mpoForm.shipmentDate,
-                shipMode: mpoForm.shipMode,
-                lighting: mpoForm.lighting,
-                ccy: mpoForm.currency,
-                attn: mpoForm.attn,
-                remark: mpoForm.remark,
-                status: mpoForm.status,
-                payment: mpoForm.payment,
-                subconFlag: mpoForm.suconFlag,
-                subconType: mpoForm.suconType,
-                jobNoStr: mpoForm.jobNo,
-                inCharge: mpoForm.incharge,
-                UDDATE1: mpoForm.revisedDate,
-                UDField3: mpoForm.shippedTo,
-                allowPurchase: mpoForm.allowPurchase,
-                //txMpoDets:mpoForm.mpoDetail,
-            }
+                for (let d of res.data) {
+                    //console.log(d);
+                    mpoForm.mpoDetail.push({
+                        seq: count.value++,
+                        materialCode: d["matCode"],
+                        tempMat: d["tempMat"],
+                        colorCode: d["colorCode"],
+                        color: d["color"],
+                        size: d["sizes"],
+                        mpoQty: d["mrReqQty_B"],
+                        jobQty: d["mrReqQty_B"],
+                        stockQty: 0,
+                        jobReqQty: d["mrReqQty_B"],
+                        buyUnit: d["buyUnit"],
+                        price: d["uPx"],
+                        priceUnit: d["pxUnit"],
+                        width: d["width1"],
+                        weight: d["weight"]
+                    })
 
-            // http.post('api/mpo/save', mpoForm, false).then((res) => {
-            //     console.log("ERROR: " + res.message);
-            // }).catch((error) => {
-            //     alert(error.message);
-            // })
-        }
-
-        function initData(key) {
-            axios.get('./init.json').then((res) => {
-                //let value = [];
-                //value = res.data[key];
-
-                return res.data[key];
+                }
+            }).catch((error) => {
 
             })
+
+
+        }
+
+        const dataFormRules = ref({
+            mpoNo: { required: true, message: "please enter purchase code", trigger: "blur" },
+        })
+
+        const getsuppEngName = (index) => {
+            mpoForm.suppEngName = suppliers.value[index]["engName"];
+        }
+
+        const getRate = (index) => {
+            mpoForm.rate = currencies.value[index]["rate"];
+        }
+
+        const getSurDescription = (rowIndex, index) => {
+            if (mpoForm.mpoSurcharge[rowIndex]["surType"] === "") {
+                mpoForm.mpoSurcharge[rowIndex]["surDescription"] = "";
+            }
+            else {
+                mpoForm.mpoSurcharge[rowIndex]["surDescription"] = surcharges.value[index]["surDescription"];
+            }
+
+        }
+
+        const handleSurchargeDelete = (index) => {
+            mpoForm.mpoSurcharge.splice(index, 1);
+        }
+        const onSave = () => {
+            ctx.$refs.mpoFormRef.validate((valid) => {
+                if (valid) {
+                    var status = 'O';
+                    switch (mpoForm.status) {
+                        case 'Open':
+                            status = 'O';
+                            break
+                        case 'Complete':
+                            status = 'C';
+                            break
+                        case 'Cancel':
+                            status = 'X';
+                            break
+                        default: return
+                    }
+                    let txMpoHd = {
+                        mpoNo: mpoForm.mpoNo,
+                        mpoType: mpoForm.mpoType,
+                        revision: mpoForm.revision,
+                        mpoDate: mpoForm.mpoDate,
+                        heading: mpoForm.heading,
+                        suppCode: mpoForm.supplier,
+                        terms: mpoForm.terms,
+                        deliAdd: mpoForm.deliveryAddress,
+                        shipDate: mpoForm.shipmentDate,
+                        shipMode: mpoForm.shipMode,
+                        lighting: mpoForm.lighting,
+                        ccy: mpoForm.currency,
+                        attn: mpoForm.attn,
+                        remark: mpoForm.remark,
+                        status: status,
+                        payment: mpoForm.payment,
+                        subconFlag: mpoForm.suconFlag,
+                        subconType: mpoForm.suconType,
+                        jobNoStr: mpoForm.jobNo,
+                        inCharge: mpoForm.incharge,
+                        revisedDate: mpoForm.revisedDate,
+                        shippedTo: mpoForm.shippedTo,
+                        allowPurchase: mpoForm.allowPurchase,
+                        txMpoDets: mpoForm.mpoDetail,
+                        txMpoSurcharges: mpoForm.mpoSurcharge
+                    }
+
+
+                    http.mpo.saveMpo(txMpoHd).then((res) => {
+                        console.log("ERROR: " + res.message);
+                    }).catch((error) => {
+                        alert(error.message);
+                    })
+                    ctx.$refs["mpoFormRef"].resetFields();
+                } else {
+                    proxy.$message({ message: 'MpoNo can not be empty.', type: 'warning' })
+                    ctx.$refs["mpoFormRef"].resetFields();
+                }
+            })
+
+        }
+
+        function initData() {
+
+            http.dtrade.getSupplier().then((res) => {
+                suppliers.value = res.data;
+
+                // for(let v of suppliers.value){
+                //     console.log(v["engName"]);
+                // }
+
+            }).catch((error) => {
+
+            });
+
+            http.dtrade.getTerms().then((res) => {
+                terms.value = res.data;
+            }).catch((error) => {
+
+            });
+
+            http.dtrade.getPayment().then((res) => {
+                payments.value = res.data;
+            }).catch((error) => {
+
+            });
+
+            http.dtrade.getCcy().then((res) => {
+                currencies.value = res.data;
+                //console.log(currencies.value);
+            }).catch((error) => {
+
+            });
+
+            http.dtrade.getShipped().then((res) => {
+                shippeds.value = res.data;
+            }).catch((error) => {
+
+            })
+
+            http.dtrade.getSurType().then((res) => {
+                surcharges.value = res.data;
+            }).catch((error) => {
+
+            })
+            // axios.get('./init.json').then((res) => {
+            //     //let value = [];
+            //     //value = res.data[key];
+
+            //     return res.data[key];
+
+            // })
+
+
         }
 
         function addRow() {
@@ -466,38 +679,13 @@ export default (await import('vue')).defineComponent({
             mpoForm.mpoDetail.splice(index, 1);
         }
 
-        if (store.state.selectedData.length > 0) {
-            mpoForm.heading = store.state.selectedData[0]["scHeading"];
-            mpoForm.shipmentDate = new Date();
-            mpoForm.supplier = store.state.selectedData[0]["suppCode"];
-            mpoForm.suppEngName = store.state.selectedData[0]["suppName"];
-            mpoForm.currency = store.state.selectedData[0]["ccy"];
-            mpoForm.rate = store.state.selectedData[0]["rate"];
-            for (let d of store.state.selectedData) {
-                mpoForm.mpoDetail.push({
-                    seq: count.value++,
-                    materialCode: d["matCode"],
-                    tempMat: d["tempMat"],
-                    colorCode: d["colorCode"],
-                    color: d["color"],
-                    size: d["sizes"],
-                    mpoQty: d["mrReqQty_B"],
-                    jobQty: d["mrReqQty_B"],
-                    stockQty: 0,
-                    jobReqQty: d["mrReqQty_B"],
-                    buyUnit: d["buyUnit"],
-                    price: d["uPx"],
-                    priceUnit: d["pxUnit"],
-                    width: d["width1"],
-                    weight: d["weight"]
-                })
-               
-            }
-        }
-
+        onMounted(() => {
+            initData();
+        });
 
         return {
             mpoForm,
+            mpoFormRef,
             count,
             mpoTypes,
             lightings,
@@ -505,10 +693,21 @@ export default (await import('vue')).defineComponent({
             headings,
             shipModes,
             ccys,
+            dataFormRules,
+            suppliers,
+            terms,
+            payments,
+            currencies,
+            shippeds,
+            surcharges,
             onSave,
             initData,
             addRow,
             deleteRow,
+            getsuppEngName,
+            getRate,
+            getSurDescription,
+            handleSurchargeDelete,
 
         }
     },
@@ -516,6 +715,8 @@ export default (await import('vue')).defineComponent({
         return {
             tabClickIndex: null,
             tabClickLabel: '',
+            tabSurchargeClickIndex: null,
+            tabSurchargeClickLabel: '',
 
         }
     },
@@ -591,8 +792,36 @@ export default (await import('vue')).defineComponent({
         inputBlur(row, event, column) {
             this.tabClickIndex = null;
             this.tabClickLabel = '';
-        }
-    }
+        },
+
+        surchargeTableRowClassName({ row, rowIndex }) {
+            row.index = rowIndex
+        },
+        surchargeTabClick(row, column, cell, event) {
+            switch (column.label) {
+                case 'SurType':
+                    this.tabSurchargeClickIndex = row.index;
+                    this.tabSurchargeClickLabel = column.label
+                    break
+                case 'SurPercent':
+                    this.tabSurchargeClickIndex = row.index;
+                    this.tabSurchargeClickLabel = column.label
+                    break
+                case 'SurAmount':
+                    this.tabSurchargeClickIndex = row.index;
+                    this.tabSurchargeClickLabel = column.label;
+                    break
+
+                default: return;
+            }
+        },
+        inputSurchargeBlur(row, event, column) {
+            this.tabSurchargeClickIndex = null;
+            this.tabSurchargeClickLabel = '';
+        },
+
+    },
+
 })
 </script>
 <style lang="less" scoped>

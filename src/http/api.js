@@ -6,6 +6,7 @@ import * as menu from './modules/menu'
 import * as dict from './modules/dict' 
 import * as log from './modules/log'
 import * as mpo from './modules/mpo'
+import * as dtrade from './modules/dtrade'
 
 export default{
     login,
@@ -15,5 +16,6 @@ export default{
     menu,
     dict,
     log,
-    mpo
+    mpo,
+    dtrade
 }

@@ -17,7 +17,7 @@ export default createStore({
         data: {},
         permission: [],
         isLoading: false,
-        userInfo: null,
+        userInfo: '',
         //GEN MPO 的数据
         selectedData:{}
     },
