@@ -1,7 +1,7 @@
 <template>
     <div>
         <div style="float: left;padding-top:0px;">
-            <el-dialog v-model="dialogVisible" style="width: 50%;" @close="closeDialog" draggable="true">
+            <el-dialog v-model="dialogVisible" style="width: 50%;" @close="closeDialog" draggable="false">
                 <el-form :model="formData" :inline="true" style="margin-left: -20px;">
                     <el-form-item style="margin-left: -200px;">
                         <el-select v-model="formData.filterName">

@@ -19,31 +19,40 @@
                 <el-button @click="search">Search</el-button>
             </label>
         </div>
-      
+
     </div>
     <div style="display: flex; padding: 20px 0px 0px 0px;">
         <el-table :data="tableData" border style="width: 100%;">
+            <el-table-column label="Operations" >
+                <template #default="scope">
+                    <el-button size="small" type="primary" @click="handleEdit(scope.row.id)">Edit</el-button>
+                    <el-button size="small" type="danger" @click="handleDelete(scope.$index,scope.row.id)">Delete</el-button>
+                </template>
+            </el-table-column>
             <el-table-column prop="mpoNo" label="MpoNo" width="100" />
             <el-table-column prop="mpoDate" label="MpoDate" width="100" :formatter="getTableDateFormat" />
             <el-table-column prop="mpoType" label="MpoType" width="100" />
-            <el-table-column prop="attn" label="Attn" width="100" />
+            <el-table-column prop="jobNo" label="Job No" width="100" />
             <el-table-column prop="heading" label="Heading" width="100" />
-            <el-table-column prop="shipMode" label="Ship Mode" width="100" />
-            <el-table-column prop="shippment" label="Shippment" width="100" />
             <el-table-column prop="supplier" label="Supplier" width="100" />
-            <el-table-column label="Operations">
-                <template #default="scope">
-                    <el-button size="small" type="primary" @click="handleEdit(scope.$index)">Edit</el-button>
-                    <el-button size="small" type="danger" @click="handleDelete(scope.$index)">Delete</el-button>
-                </template>
-            </el-table-column>
+            <el-table-column prop="shippedTo" label="Ship To" width="100" />
+            <el-table-column prop="shipMode" label="Ship Mode" width="100" />
+            <el-table-column prop="shipDate" label="ShipDate" width="100" />
+            <el-table-column prop="status" label="Status" width="100" />
+            <el-table-column prop="ccy" label="Currency" width="100" />
+            <el-table-column prop="terms" label="Terms" width="100" />
+            <el-table-column prop="payment" fixed="right" label="Payment" width="100" />
+            <el-table-column prop="attn" label="Attn" width="100" />
+            
         </el-table>
     </div>
 </template>
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, getCurrentInstance } from 'vue';
 import http from '@/http/api'
 import { alertProps } from 'element-plus';
+import store from '@/store';
+import router from '@/router'
 export default defineComponent({
     name: 'SearchMPO',
     data() {
@@ -52,11 +61,17 @@ export default defineComponent({
 
         }
     },
-    setup() {
+    setup(props, context) {
+        store.commit("clearMpoData");
+        // 获取全局属性和方法
+        const { proxy} = getCurrentInstance();
+
         const mpoNo = ref('');
         const mpoDate = ref('');
-        const mpoDate1 = ref('');
-        const mpoDate2 = ref('');
+      
+        
+
+       
         const shortcuts = [
             {
                 text: 'Last week',
@@ -86,36 +101,75 @@ export default defineComponent({
                 },
             },
         ];
-        var tableData = ref([
-            {
-                mpoNo: 'fb24-5480',
-                mpoDate: '2018-08-05',
-                mpoType: '',
-                attn: 'simons',
-                heading: 'hcw',
-                shipMode: 'sea',
-                shipment: '2018-09-01',
-                supplier: 'WAFUKN',
-            },
-        ]);
-        function handleEdit(index) {
-            alert(index)
-        }
-        // const handleEdit = (index) => {
+        var tableData = ref([]);
+        function handleEdit(id) {
+            let params = {
+                id: id
+            }
+            http.mpo.getMpo(params).then((res) => {
+                if (res.status === 200) {
+                    let data=res.data;
+                    store.commit("setMpoData", data);
+                    store.commit("updateEditState",true);
+                    router.push({ name: "EditMpo" });
+                }
 
-        // }
-        const handleDelete = (index) => {
+                if (res.status === 404) {
+                    router.push("/404");
+                    store.commit("clearMpoData");
+                }
+            }).catch((error) => {
+                if (error.response.status === 404) {
+                    router.push("/404");
+                    store.commit("clearMpoData");
+                }
+            })
+
 
         }
+
+        const handleDelete = (index,id) => {
+            let params = {
+                id: id
+            }
+            http.mpo.deleteMpo(params).then((res) => {
+                if (res.status === 200) {
+                    proxy.$message({
+                        message: "The data has been deleted successfully.",
+                        type: "info"
+                    });
+                    tableData.value.splice(index, 1);
+                }
+            }).catch((error) => {
+                proxy.$message({ message: 'Failed to delete data', type: 'error' })
+
+            })
+
+            
+        }
+
+        function defaultDate() {
+            
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+          
+            mpoDate.value=[start,end];
+        
+
+
+     
+        } 
+
         return {
             mpoNo,
             mpoDate,
-            mpoDate1,
-            mpoDate2,
+           
             shortcuts,
             tableData,
             handleEdit,
             handleDelete,
+            defaultDate,
         }
 
     },
@@ -137,29 +191,23 @@ export default defineComponent({
             let day = (time.getDate() + 1) < 10 ? '0' + (time.getDate() + 1) : (time.getDate())
             return year + '-' + month + '-' + day
         },
-        defaultDate() {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            this.mpoDate = [start,end];
-        
-           
-        },
+       
         search() {
-            if (this.mpoDate != '') {
-                this.mpoDate1 = this.mpoDate[0]
-                this.mpoDate2 = this.mpoDate[1]
+            if (this.mpoDate) {
+                var mpoDate1 = this.mpoDate[0]
+                var mpoDate2 = this.mpoDate[1]
             }
-           
+
             let params = {
                 mpo: this.mpoNo,
-                start: this.mpoDate1,
-                end: this.mpoDate2
+                start: mpoDate1,
+                end: mpoDate2
             }
 
             http.mpo.getMpoHd(params).then((res) => {
+
                 this.tableData = res.data
-                
+
             }).catch((error) => {
                 this.$message({ message: 'failed request, ' + error, type: 'error' })
             })
@@ -168,6 +216,9 @@ export default defineComponent({
     },
     mounted() {
         this.defaultDate();
+        this.search();
+      
+        //console.log("search mounted test");
     },
 })
 </script>

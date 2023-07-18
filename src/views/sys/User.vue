@@ -73,7 +73,7 @@ import axios from 'axios'
 import { defineComponent, ref } from 'vue'
 export default defineComponent({
     name: 'user',
-    setup(props, ctx) {
+    setup(props, context) {
         const filters = ref({
             name: ''
         })
@@ -131,8 +131,8 @@ export default defineComponent({
                 email: '',
                 createBy: '',
                 createDate: '',
-                modifier:'',
-                modifyDate:''
+                modifier: '',
+                modifyDate: ''
             },
             deptData: [],
             deptTreeProps: {
@@ -232,8 +232,8 @@ export default defineComponent({
                                 email: this.dataForm.email,
                                 createBy: store.state.userInfo,
                                 createDate: this.dataForm.createDate,
-                                modifier:'',
-                                modifyDate:null,
+                                modifier: '',
+                                modifyDate: null,
                             }
                             http.user.save(data).then((res) => {
                                 //this.editLoading = false
@@ -255,7 +255,7 @@ export default defineComponent({
                             })
                         } else {
                             let data = {
-                                id:this.dataForm.id,
+                                id: this.dataForm.id,
                                 userName: this.dataForm.userName,
                                 password: this.dataForm.password,
                                 detpId: this.dataForm.detpId,
@@ -264,8 +264,8 @@ export default defineComponent({
                                 ntid: this.dataForm.ntid,
                                 tel: this.dataForm.tel,
                                 email: this.dataForm.email,
-                                createBy:this.dataForm.createBy,
-                                createDate:this.dataForm.createDate,
+                                createBy: this.dataForm.createBy,
+                                createDate: this.dataForm.createDate,
                                 modifier: store.state.userInfo,
                                 modifyDate: new Date()
                             }

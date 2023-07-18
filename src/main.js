@@ -47,4 +47,4 @@ app.use(store)
 app.use(router)
 app.use(ElementUI)
 app.mount('#app')
-//app.config.globalProperties.$Message=app,config.globalProperties.$message;
+app.config.globalProperties.$Message=app.config.globalProperties.$message;

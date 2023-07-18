@@ -2,9 +2,9 @@
     <div>
         <div class="demo-date-picker">
             <label style="padding-left: 25px;">
-                <span>
+                
                     TxnNo
-                </span>
+               
 
                 <el-input style="width: 200px;" v-model="txnNo">
                     <template #suffix>
@@ -67,12 +67,12 @@ export default defineComponent({
         };
     },
     setup(props,context) {
+  
+        
         const reload=inject('reload');
         const{proxy}=getCurrentInstance();
         
-        proxy.$nextTick(()=>{
-
-        })
+      
 
         var dialogVisible = ref(false);
         const txnNo = ref("");
@@ -142,9 +142,7 @@ export default defineComponent({
     },
     props: {},
     methods: {
-        test() {
-            alert(this.mpo);
-        },
+       
         getDateFormat() {
             return "YYYY-MM-DD";
         },
@@ -184,6 +182,7 @@ export default defineComponent({
         genMpo() {
             
             if (this.selectedData.length > 0){
+                store.commit("updateEditState",false);
                 this.$router.push({ name: 'EditMpo' })
                 this.reload();
             }
@@ -191,10 +190,10 @@ export default defineComponent({
         }
     },
     mounted() {
-        
+        //console.log("genMpo mounted test");
     },
     components: { JobOrder }
-})
+})  
 </script>
 <style lang="less" scoped>
 .v-date-range ::v-deep(.el-input__prefix) {

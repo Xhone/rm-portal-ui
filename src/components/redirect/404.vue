@@ -1,6 +1,6 @@
 <template>
   <div style="height:100%;">
-    <redirect-error :text="text" :errorNumber="errorNumber"></redirect-error>
+    <redirect-error :text="text" :errorNumber="errorNumber" :message="message"></redirect-error>
   </div>
 </template>
   <script>
@@ -12,7 +12,8 @@ export default {
   data() {
     return {
       errorNumber:'404',
-      text: "抱歉，页面不存在~"
+      text: "404 page.",
+      message:"sorry,the data is not found."
     };
   }
 };

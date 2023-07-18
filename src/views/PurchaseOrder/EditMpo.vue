@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div style="display: flex; width: 100%; padding: 0;flex-wrap: wrap;">
+            <MaMatHeadDet :visible="dialogVisible" @selected-mat-code="getMatCode"></MaMatHeadDet>
+        </div>
         <el-form ref="mpoFormRef" :model="mpoForm" :rules="dataFormRules" style="padding: 0px 20px 0px 0px;"
             class="demo-ruleForm">
             <el-row>
@@ -149,9 +152,9 @@
             </el-row>
             <el-form-item label="OverQty">
                 <el-radio-group v-model="mpoForm.overQtyType">
-                    <el-radio id="1" label="Job Average" />
-                    <el-radio id="2" label="ToStock" />
-                    <el-radio id="3" label="Manual" />
+                    <el-radio id="1" label="1">Job Average</el-radio>
+                    <el-radio id="2" label="2">ToStock</el-radio>
+                    <el-radio id="3" label="3">Manual</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-row>
@@ -176,8 +179,8 @@
             </el-form-item>
 
             <el-form-item label="Detail">
-                <el-table :data="mpoForm.mpoDetail" :row-class-name="tableRowClassName" border style="width: 100%;"
-                    @cell-click="tabClick">
+                <el-table :data="mpoForm.mpoDetail" :row-class-name="tableRowClassName" :summary-method="getSumDetail"
+                    stripe border style="width: 100%;" @cell-click="tabClick">
 
                     <el-table-column prop="seq" label="Seq" property="true">
                         <template #default="scope">
@@ -189,13 +192,93 @@
                         </template>
 
                     </el-table-column>
-                    <el-table-column prop="materialCode" label="Material Code" width="130">
+                    <el-table-column prop="matCode" label="Material Code" width="150">
                         <template #default="scope">
                             <span v-if="scope.row.index === tabClickIndex && tabClickLabel === 'Material Code'">
-                                <el-input v-model="scope.row.materialCode" placeholder="please input material code"
-                                    size="mini" @blue="inputBlur" />
+                                <el-input v-model="scope.row.matCode" placeholder="please input material code" size="mini"
+                                    @blue="inputBlur">
+                                    <template #suffix>
+                                        <el-button style="border: none;margin-right: -10px;"
+                                            @click="getVisible">...</el-button>
+                                    </template>
+                                </el-input>
                             </span>
-                            <span v-else>{{ scope.row.materialCode }}</span>
+                            <span v-else>{{ scope.row.matCode }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column type="expand" label="...">
+                        <template #default="props">
+                            <div>
+                                <div class="block">
+                                    <label>Material Code:</label> <el-input style="width:320px;"
+                                        v-model="props.row.matCode" />
+                                    <label style="margin-left:20px">Temp Mat:</label> <el-input style="width:420px;"
+                                        v-model="props.row.tempMat" />
+                                </div>
+
+                                <div class="block">
+                                    <label>Description:</label> <el-input
+                                        style="width: 800px;height:auto;vertical-align: top;" v-model="props.row.matDesc"
+                                        type="textarea" />
+
+                                </div>
+                                <div class="block">
+                                    <label>Color Code:</label> <el-input style="width: 150px;"
+                                        v-model="props.row.colorCode" />
+                                    <label>Color:</label> <el-input style="width: 150px;" v-model="props.row.color" />
+                                    <label>Size:</label> <el-input style="width: 150px;" v-model="props.row.size" />
+                                </div>
+
+                                <div class="block">
+                                    <label>Vendor Article No:</label> <el-input style="width: 150px;"
+                                        v-model="props.row.vendorNo" />
+                                    <label>Vendor Color:</label> <el-input style="width: 150px;"
+                                        v-model="props.row.vendorColor" />
+                                    <label>Origin:</label> <el-select style="width: 150px;" v-model="props.row.origin">
+                                        <el-option v-for="item in countries" :value="item" />
+                                    </el-select>
+                                </div>
+
+                                <div class="block"><label>Width:</label> <el-input style="width: 150px;" type="text"
+                                        v-model="props.row.width" />
+                                    <el-input style="width:80px" v-model="props.row.widthUnit" />
+                                    <label>Weight:</label> <el-input style="width: 150px;" v-model="props.row.weight" />
+                                </div>
+                                <div class="block">
+                                    <label>Qty:</label> <el-input style="width: 150px;" v-model="props.row.qty" />
+                                    <el-input style="width:80px;" v-model="props.row.buyUnit" />
+                                </div>
+
+                                <div class="block">
+                                    <label>Unit Price:</label> <el-input style="width: 150px;" v-model="props.row.upx" />
+                                    <el-input style="width:80px;" v-model="props.row.pxUnit" />
+                                </div>
+                                <div class="block">
+                                    <label>Buy Unit:</label> <el-input style="width:80px" v-model="props.row.buyUnit" /> =
+                                    <el-input style="width:80px" v-model="props.row.buyUnitFactor" />
+                                    <el-input style="width:80px" v-model="props.row.buyUnit" />
+                                </div>
+                                <div class="block">
+                                    <label>Price Unit:</label> <el-input style="width: 80px;" v-model="props.row.pxUnit" />
+                                    = <el-input style="width: 80px;" v-model="props.row.pxUnitFactor" />
+                                    <el-input style="width:80px" v-model="props.row.buyUnit" />
+                                </div>
+
+                                <div class="block">
+                                    <label>Custom Description:</label> <el-input
+                                        style="width: 600px;height: auto;vertical-align: top;" v-model="props.row.remark"
+                                        type="textarea" />
+                                </div>
+                                <h3>Job Details</h3>
+                                <el-table :data="props.row.txMpoDetMrs" border>
+                                    <el-table-column label="Job No" prop="mrNo">
+
+                                    </el-table-column>
+                                    <el-table-column label="Req Qty" prop="qty"></el-table-column>
+                                    <el-table-column label="Net Bal Qty"></el-table-column>
+                                    <el-table-column label="Mpo Qty" prop="qty"></el-table-column>
+                                </el-table>
+                            </div>
                         </template>
                     </el-table-column>
                     <el-table-column prop="tempMat" label="Temp Mat" width="120">
@@ -234,23 +317,23 @@
                             <span v-else>{{ scope.row.size }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="mpoQty" label="Mpo Qty" width="100">
+                    <el-table-column prop="qty" label="Mpo Qty" width="100">
                         <template #default="scope">
                             <span v-if="scope.row.index === tabClickIndex && tabClickLabel === 'Mpo Qty'">
-                                <el-input v-model="scope.row.mpoQty" :blur="inputBlur" placeholder="please input quantity"
+                                <el-input v-model="scope.row.qty" :blur="inputBlur" placeholder="please input quantity"
                                     size="mini" @blue="inputBlur" />
                             </span>
-                            <span v-else>{{ scope.row.mpoQty }}</span>
+                            <span v-else>{{ scope.row.qty }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column label="Allocation" align="center">
-                        <el-table-column prop="jobQty" label="Job Qty" width="100">
+                        <el-table-column prop="mrQty" label="Job Qty" width="100">
                             <template #default="scope">
                                 <span v-if="scope.row.index === tabClickIndex && tabClickLabel === 'Job Qty'">
-                                    <el-input v-model="scope.row.jobQty" placeholder="please input quantity" size="mini"
+                                    <el-input v-model="scope.row.mrQty" placeholder="please input quantity" size="mini"
                                         @blue="inputBlur" />
                                 </span>
-                                <span v-else>{{ scope.row.jobQty }}</span>
+                                <span v-else>{{ scope.row.mrQty }}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="stockQty" label="Stock Qty" width="100">
@@ -263,13 +346,13 @@
                             </template>
                         </el-table-column>
                     </el-table-column>
-                    <el-table-column prop="jobReqQty" label="Job Req Qty" width="108">
+                    <el-table-column prop="firstMrQty" label="Job Req Qty" width="108">
                         <template #default="scope">
                             <span v-if="scope.row.index === tabClickIndex && tabClickLabel === 'Job Req Qty'">
-                                <el-input v-model="scope.row.jobReqQty" placeholder="please input quantity" size="mini"
+                                <el-input v-model="scope.row.firstMrQty" placeholder="please input quantity" size="mini"
                                     @blue="inputBlur" />
                             </span>
-                            <span v-else>{{ scope.row.jobReqQty }}</span>
+                            <span v-else>{{ scope.row.firstMrQty }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="buyUnit" label="Buy Unit" width="100">
@@ -281,22 +364,22 @@
                             <span v-else>{{ scope.row.buyUnit }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="price" label="Price" width="60">
+                    <el-table-column prop="upx" label="Price" width="60">
                         <template #default="scope">
                             <span v-if="scope.row.index === tabClickIndex && tabClickLabel === 'Price'">
-                                <el-input v-model="scope.row.price" placeholder="please input price" size="mini"
+                                <el-input v-model="scope.row.upx" placeholder="please input price" size="mini"
                                     @blue="inputBlur" />
                             </span>
-                            <span v-else>{{ scope.row.price }}</span>
+                            <span v-else>{{ scope.row.upx }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="priceUnit" label="Price Unit" width="100">
+                    <el-table-column prop="pxUnit" label="Price Unit" width="100">
                         <template #default="scope">
                             <span v-if="scope.row.index === tabClickIndex && tabClickLabel === 'Price Unit'">
-                                <el-input v-model="scope.row.priceUnit" placeholder="please input unit" size="mini"
+                                <el-input v-model="scope.row.pxUnit" placeholder="please input unit" size="mini"
                                     @blue="inputBlur" />
                             </span>
-                            <span v-else>{{ scope.row.priceUnit }}</span>
+                            <span v-else>{{ scope.row.pxUnit }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="width" label="Width" width="100">
@@ -330,7 +413,7 @@
             </el-form-item>
             <el-form-item label="Surcharge">
                 <el-table :data="mpoForm.mpoSurcharge" :row-class-name="surchargeTableRowClassName"
-                    @cell-click="surchargeTabClick" border style="width: 100%;">
+                    @cell-click="surchargeTabClick" @cell-mouse-leave="surchargeCellMouseLeave" border style="width: 100%;">
                     <el-table-column prop="surType" label="SurType">
                         <template #default="scope">
                             <span v-if="scope.row.index === tabSurchargeClickIndex && tabSurchargeClickLabel === 'SurType'">
@@ -383,26 +466,31 @@
     </div>
 </template>
 <script>
-import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
-import axios from 'axios'
+import { ref, reactive, getCurrentInstance, onMounted, inject, watch, onUpdated } from 'vue';
 import store from '@/store/index'
 import http from '@/http/api'
-
+import MaMatHeadDet from './MaMatHeadDet.vue';
 export default (await import('vue')).defineComponent({
     name: 'EditMpo',
+    components: {
+        MaMatHeadDet
+    },
     setup(props, context) {
+
+        const reload = inject('reload');
         // 获取全局属性和方法
-        const { proxy, ctx } = getCurrentInstance();
+        const { proxy } = getCurrentInstance();
 
         const mpoForm = reactive({
+            id: 0,
             mpoNo: '',
             mpoDate: new Date(),
             attn: '',
             mpoType: '',
-            revisedDate: '',
+            revisedDate: new Date(),
             shipMode: '',
             heading: '',
-            shipmentDate: '',
+            shipmentDate: new Date(),
             lighting: '',
             shippedTo: '',
             supplier: '',
@@ -415,18 +503,18 @@ export default (await import('vue')).defineComponent({
             payment: '',
             deliveryAddress: '',
             allowPurchase: 0,
-            overQtyType: 'Job Average',
+            overQtyType: '1',
             suconFlag: false,
             suconType: '',
-            revision: 0,
+            revision: '',
             jobNo: '',
             remark: '',
             mpoDetail: [],
+            txMpoMatDetail: [],
             mpoSurcharge: [{ "surType": "", "surDescription": "", "surPercent": 0, "surAmount": 0 }]
         });
 
         const mpoFormRef = ref(mpoForm);
-
         const suppliers = ref([]);
         const count = ref(1);
         const mpoTypes = ref(["BUY TO ORDER", "PROVIDED BY CLIENT", "DEFECT REPLACEMENT", "ADDITIONAL PURCHASE", "PURCHASE CALICO"])
@@ -475,50 +563,75 @@ export default (await import('vue')).defineComponent({
 
         const surcharges = ref([]);
 
-        if (store.state.selectedData.length > 0) {
-            //console.log(store.state.userInfo);
-            mpoForm.incharge = store.state.userInfo;
-            mpoForm.heading = store.state.selectedData[0]["scHeading"];
-            mpoForm.shipmentDate = new Date();
-            mpoForm.supplier = store.state.selectedData[0]["suppCode"];
-            mpoForm.suppEngName = store.state.selectedData[0]["suppName"];
-            mpoForm.currency = store.state.selectedData[0]["ccy"];
-            mpoForm.rate = store.state.selectedData[0]["rate"];
-            mpoForm.jobNo = store.state.selectedData[0]["jobNo"];
+        const countries = ref([]);
 
-            http.dtrade.getSumPoData(store.state.selectedData).then((res) => {
+        var dialogVisible = ref(false);
 
+        var matCode = ref('');
 
-                for (let d of res.data) {
-                    //console.log(d);
-                    mpoForm.mpoDetail.push({
-                        seq: count.value++,
-                        materialCode: d["matCode"],
-                        tempMat: d["tempMat"],
-                        colorCode: d["colorCode"],
-                        color: d["color"],
-                        size: d["sizes"],
-                        mpoQty: d["mrReqQty_B"],
-                        jobQty: d["mrReqQty_B"],
-                        stockQty: 0,
-                        jobReqQty: d["mrReqQty_B"],
-                        buyUnit: d["buyUnit"],
-                        price: d["uPx"],
-                        priceUnit: d["pxUnit"],
-                        width: d["width1"],
-                        weight: d["weight"]
-                    })
+        if (store.state.selectedData) {
 
+            if (store.state.selectedData.length > 0) {
+                //console.log(store.state.userInfo);
+                mpoForm.incharge = store.state.userInfo;
+                mpoForm.heading = store.state.selectedData[0]["scHeading"];
+                mpoForm.shipmentDate = new Date();
+                mpoForm.supplier = store.state.selectedData[0]["suppCode"];
+                mpoForm.suppEngName = store.state.selectedData[0]["suppName"];
+                mpoForm.currency = store.state.selectedData[0]["ccy"];
+                mpoForm.rate = store.state.selectedData[0]["rate"];
+                mpoForm.jobNo = store.state.selectedData[0]["jobNo"];
+
+                for (let i = 1; i < store.state.selectedData.length; i++) {
+                    if (store.state.selectedData[i]["jobNo"] != store.state.selectedData[i - 1]["jobNo"]) {
+                        mpoForm.jobNo += "," + store.state.selectedData[i]["jobNo"];
+                    }
                 }
-            }).catch((error) => {
 
-            })
+                http.dtrade.getSumPoData(store.state.selectedData).then((res) => {
 
 
+                    for (let d of res.data) {
+                        //console.log(d);
+                        mpoForm.mpoDetail.push({
+                            seq: count.value++,
+                            matCode: d["matCode"],
+                            tempMat: d["tempMat"],
+                            colorCode: d["colorCode"],
+                            color: d["color"],
+                            size: d["sizes"],
+                            qty: d["mrReqQty_B"],
+                            mrQty: d["mrReqQty_B"],
+                            stockQty: 0,
+                            firstMrQty: d["mrReqQty_B"],
+                            buyUnit: d["buyUnit"],
+                            upx: d["uPx"],
+                            pxUnit: d["pxUnit"],
+                            width: d["width1"],
+                            weight: d["weight"],
+                            widthUnit: d["widthUnit"],
+                            buyUnitFactor: d["buyUnitFactor"],
+                            pxUnitFactor: d["pxUnitFactor"],
+                            matDesc: d["matDesc"],
+                            txMpoDetMrs: d["mrDatas"]
+                        })
+
+                        //console.log(mpoForm.mpoDetail);
+
+                    }
+                }).catch((error) => {
+
+                })
+
+                getMatDetail();
+            }
         }
+
 
         const dataFormRules = ref({
             mpoNo: { required: true, message: "please enter purchase code", trigger: "blur" },
+            mpoType: { required: true, message: "", trigger: "blur" },
+            currency: { required: true, message: "", trigger: "blur" },
         })
 
         const getsuppEngName = (index) => {
@@ -539,11 +652,117 @@ export default (await import('vue')).defineComponent({
 
         }
 
+        function getMatDetail() {
+            http.dtrade.getMatDetail(store.state.selectedData).then((res) => {
+
+
+                for (let d of res.data) {
+                    //console.log(d);
+                    mpoForm.txMpoMatDetail.push({
+                        matCode: d["matCode"],
+                        tempMat: d["tempMat"],
+                        buyUnit: d["buyUnit"],
+                        buyUnitFactor: d["buyUnitFactor"],
+                        priceUnit: d["priceUnit"],
+                        priceUnitFactor: d["priceUnitFactor"],
+                        width: d["width"],
+                        weight: d["weight"],
+                        matDesc: d["matDesc"],
+                        mpoAmount: d["mpoAmount"],
+                        remark: '',
+                        origin: '',
+
+                    })
+
+
+
+                }
+            }).catch((error) => {
+
+            })
+
+        }
+
+        function getVisible() {
+            dialogVisible.value = true;
+        }
+
+        function getMatCode(value1, value2) {
+            mpoForm.mpoDetail[proxy.tabClickIndex]["matCode"] = value1;
+            matCode.value = value1;
+            dialogVisible.value = value2;
+            let params = {
+                matCode: value1
+            };
+            http.dtrade.getMaMatDetail(params).then((res) => {
+                mpoForm.mpoDetail[proxy.tabClickIndex]["matDesc"] = res.data["description"];
+                mpoForm.mpoDetail[proxy.tabClickIndex]["width"] = res.data["width1"];
+                mpoForm.mpoDetail[proxy.tabClickIndex]["weight"] = res.data["weight"];
+                mpoForm.mpoDetail[proxy.tabClickIndex]["buyUnit"] = res.data["buyUnit"];
+                mpoForm.mpoDetail[proxy.tabClickIndex]["buyUnitFactor"] = res.data["buyUnitFactor"];
+                mpoForm.mpoDetail[proxy.tabClickIndex]["pxUnit"] = res.data["pxUnit"];
+                mpoForm.mpoDetail[proxy.tabClickIndex]["pxUnitFactor"] = res.data["pxUnitFactor"];
+                mpoForm.mpoDetail[proxy.tabClickIndex]["widthUnit"] = res.data["widthUnit"];
+                mpoForm.mpoDetail[proxy.tabClickIndex]["upx"] = res.data["upx"];
+            }).catch((error) => {
+
+            })
+        }
+
         const handleSurchargeDelete = (index) => {
             mpoForm.mpoSurcharge.splice(index, 1);
         }
+
+        const surchargeCellMouseLeave = (row, column, cell, event) => {
+            switch (column.label) {
+                case ("SurPercent"):
+                    console.log(mpoForm.mpoSurcharge[row.index]["surPercent"] / 100);
+                    break;
+                default:
+                    break;
+            }
+        }
+        var qtys = 0;
+        var prices = 0;
+        const getSumDetail = (param) => {
+            const { columns, data } = param;
+
+            //console.log(columns);
+
+            //     columns.forEach((column, index) => {
+            //     const values = data.map((item) => Number(item[column.property]));
+
+            //     //console.log(column.property)
+            //     // if (column.property == "qty") {
+            //     //     qtys = values.reduce((prev, curr) => {
+            //     //         const value = Number(curr);
+            //     //         if (!isNaN(value)) {
+            //     //             return prev + curr;
+            //     //         } else {
+            //     //             return prev;
+            //     //         }
+            //     //     }, 0);
+            //     // }
+            //     // if (column.property == "upx") {
+            //     //     prices = values.reduce((prev, curr) => {
+            //     //         const value = Number(curr);
+            //     //         if (!isNaN(value)) {
+            //     //             return prev + curr;
+            //     //         } else {
+            //     //             return prev;
+            //     //         }
+            //     //     }, 0)
+            //     // }
+
+            //     console.log(qtys*prices);
+
+
+            // })
+
+
+        }
         const onSave = () => {
-            ctx.$refs.mpoFormRef.validate((valid) => {
+            proxy.$refs.mpoFormRef.validate((valid) => {
                 if (valid) {
                     var status = 'O';
                     switch (mpoForm.status) {
@@ -559,6 +778,7 @@ export default (await import('vue')).defineComponent({
                         default: return
                     }
                     let txMpoHd = {
+                        id: mpoForm.id,
                         mpoNo: mpoForm.mpoNo,
                         mpoType: mpoForm.mpoType,
                         revision: mpoForm.revision,
@@ -582,20 +802,33 @@ export default (await import('vue')).defineComponent({
                         revisedDate: mpoForm.revisedDate,
                         shippedTo: mpoForm.shippedTo,
                         allowPurchase: mpoForm.allowPurchase,
+                        overQtyType: mpoForm.overQtyType,
                         txMpoDets: mpoForm.mpoDetail,
+                        txMpoMatDets: mpoForm.txMpoMatDetail,
                         txMpoSurcharges: mpoForm.mpoSurcharge
                     }
 
+                    if (store.state.isEdited) {
+                        http.mpo.putMpo(txMpoHd).then((res) => {
+                            proxy.$message({ message: "successfully save", type: "info" });
+                        }).catch((error) => {
+                            proxy.$message({ message: error.data, type: "error" });
+                        })
+                    } else {
+                        http.mpo.saveMpo(txMpoHd).then((res) => {
+                            proxy.$message({ message: "successfully save", type: "info" });
+                        }).catch((error) => {
+                            proxy.$message({ message: error.data, type: "error" });
 
-                    http.mpo.saveMpo(txMpoHd).then((res) => {
-                        console.log("ERROR: " + res.message);
-                    }).catch((error) => {
-                        alert(error.message);
-                    })
-                    ctx.$refs["mpoFormRef"].resetFields();
+                        })
+                        store.commit("clearSelectedData");
+                        proxy.$refs["mpoFormRef"].resetFields();
+                    }
+                    proxy.reload();
+
                 } else {
                     proxy.$message({ message: 'MpoNo can not be empty.', type: 'warning' })
-                    ctx.$refs["mpoFormRef"].resetFields();
+                    proxy.$refs["mpoFormRef"].resetFields();
                 }
             })
 
@@ -606,9 +839,7 @@ export default (await import('vue')).defineComponent({
             http.dtrade.getSupplier().then((res) => {
                 suppliers.value = res.data;
 
-                // for(let v of suppliers.value){
-                //     console.log(v["engName"]);
-                // }
+
 
             }).catch((error) => {
 
@@ -644,6 +875,12 @@ export default (await import('vue')).defineComponent({
             }).catch((error) => {
 
             })
+
+            http.dtrade.getCountry().then((res) => {
+                countries.value = res.data;
+            }).catch((error) => {
+
+            })
             // axios.get('./init.json').then((res) => {
             //     //let value = [];
             //     //value = res.data[key];
@@ -658,20 +895,29 @@ export default (await import('vue')).defineComponent({
         function addRow() {
             mpoForm.mpoDetail.push({
                 seq: count.value++,
-                materialCode: "",
+                matCode: "",
                 tempMat: "",
                 colorCode: "",
                 color: "",
                 size: "",
-                mpoQty: 0,
-                jobQty: 0,
+                qty: 0,
+                mrQty: 0,
                 stockQty: 0,
-                jobReqQty: 0,
+                firstMrQty: 0,
                 buyUnit: "LBS",
-                price: 0,
-                priceUnit: "LBS",
+                upx: 0,
+                pxUnit: "LBS",
                 width: 0,
-                weight: 0
+                weight: 0,
+                widthUnit: "",
+                buyUnitFactor: 1,
+                pxUnitFactor: 1,
+                matDesc: "",
+                vendorNo: "",
+                vendorColor: "",
+                origin: "",
+                remark: "",
+                txMpoDetMrs: []
             })
         }
         function deleteRow(index) {
@@ -681,7 +927,60 @@ export default (await import('vue')).defineComponent({
 
         onMounted(() => {
             initData();
+
         });
+
+        onUpdated(() => {
+            //console.log("update test");
+            if (store.state.isEdited) {
+                if (store.state.mpoData) {
+                    let mpoData = store.state.mpoData;
+                    mpoForm.id = mpoData.id
+                    mpoForm.mpoNo = mpoData.mpoNo;
+                    mpoForm.mpoDate = mpoData.mpoDate;
+                    mpoForm.attn = mpoData.attn
+                    mpoForm.mpoType = mpoData.mpoType;
+                    mpoForm.revisedDate = mpoData.revisedDate;
+                    mpoForm.shipMode = mpoData.shipMode;
+                    mpoForm.heading = mpoData.heading;
+                    mpoForm.shipmentDate = mpoData.shipDate
+                    mpoForm.lighting = mpoData.lighting
+                    mpoForm.shippedTo = mpoData.shippedTo;
+                    mpoForm.supplier = mpoData.suppCode
+                    //mpoForm.suppEngName
+                    mpoForm.incharge = mpoData.inCharge
+                    mpoForm.currency = mpoData.ccy;
+                    mpoForm.rate = mpoData.rate;
+                    switch (mpoData.status) {
+                        case 'O':
+                            mpoForm.status = 'Open';
+                            break
+                        case 'C':
+                            mpoForm.status = 'Complete';
+                            break
+                        case 'X':
+                            mpoForm.status = 'Cancel';
+                            break
+                        default: break
+                    }
+
+                    mpoForm.terms = mpoData.terms;
+                    mpoForm.payment = mpoData.payment;
+                    mpoForm.deliveryAddress = mpoData.deliAdd
+                    mpoForm.allowPurchase = mpoData.allowPurchase;
+                    mpoForm.overQtyType = mpoData.overQtyType;
+                    mpoForm.suconFlag = mpoData.subconFlag;
+                    mpoForm.suconType = mpoData.subconType;
+                    mpoForm.revision = mpoData.revision;
+                    mpoForm.jobNo = mpoData.jobNoStr;
+                    mpoForm.remark = mpoData.remark;
+                    mpoForm.mpoDetail = mpoData.txMpoDets;
+                    mpoForm.txMpoMatDetail = mpoData.txMpoMatDets;
+                    mpoForm.mpoSurcharge = mpoData.txMpoSurcharges;
+                }
+            }
+        });
+
 
         return {
             mpoForm,
@@ -700,6 +999,10 @@ export default (await import('vue')).defineComponent({
             currencies,
             shippeds,
             surcharges,
+            countries,
+            dialogVisible,
+            matCode,
+            reload,
             onSave,
             initData,
             addRow,
@@ -708,6 +1011,11 @@ export default (await import('vue')).defineComponent({
             getRate,
             getSurDescription,
             handleSurchargeDelete,
+            getMatDetail,
+            getVisible,
+            getMatCode,
+            surchargeCellMouseLeave,
+            getSumDetail,
 
         }
     },
@@ -733,6 +1041,9 @@ export default (await import('vue')).defineComponent({
                 case 'Material Code':
                     this.tabClickIndex = row.index;
                     this.tabClickLabel = column.label
+                    break
+                case "...":
+                    //console.log(this.mpoForm.mpoDetail[row.index]);
                     break
                 case 'Temp Mat':
                     this.tabClickIndex = row.index;
@@ -841,4 +1152,26 @@ export default (await import('vue')).defineComponent({
     border-radius: 4px;
     min-height: 36px;
 }
+
+.block {
+    width: 1200px;
+    display: block;
+    margin: 20px 0;
+}
+
+.center {
+    text-align: center;
+}
+
+label {
+    display: inline-block;
+    width: 120px;
+    text-align: right;
+    //vertical-align: text-top;
+
+}
+
+// .el-input{
+//     vertical-align: top;
+// }
 </style>

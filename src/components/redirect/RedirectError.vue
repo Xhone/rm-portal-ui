@@ -7,7 +7,7 @@
       <div class="error-desc">{{ text }}</div>
       <div class="back">
         <el-button  type="primary" @click="backHome" icon="md-arrow-round-back"
-          >返回首页</el-button >
+          >Back to Homepage</el-button >
       </div>
     </div>
   </div>
@@ -22,7 +22,7 @@ export default {
     },
     message: {
       type: String,
-      default: "页面未找到！",
+      default: "the page is not found！",
     },
     text: {
       type: String,
