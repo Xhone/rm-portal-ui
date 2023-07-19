@@ -22,6 +22,8 @@ export default createStore({
         selectedData: {},
         //edit mpo 的数据
         mpoData: {},
+        //供应商
+        suppliers:[],
         isEdited:false
     },
     mutations: {
@@ -59,6 +61,12 @@ export default createStore({
         },
         updateEditState(state,flag){
             state.isEdited=flag;
+        },
+        setSupplier(state,data){
+            state.suppliers=data;
+        },
+        clearSupplier(state){
+            state.suppliers=[];
         }
     },
     getters: {

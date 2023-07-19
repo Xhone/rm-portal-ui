@@ -4,7 +4,7 @@
             <MaMatHeadDet :visible="dialogVisible" @selected-mat-code="getMatCode"></MaMatHeadDet>
         </div>
         <el-form ref="mpoFormRef" :model="mpoForm" :rules="dataFormRules" style="padding: 0px 20px 0px 0px;"
-            class="demo-ruleForm">
+        label-position="right" label-width="120px">
             <el-row>
                 <el-col :span="8">
                     <el-form-item label="Mpo No" prop="mpoNo">
@@ -57,13 +57,12 @@
                     </el-form-item>
 
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="2">
                     <el-select v-model="mpoForm.lighting">
                         <el-option v-for="item in lightings" :value="item" />
                     </el-select>
-
-
                 </el-col>
+                <el-col :span="2"></el-col>
                 <el-col :span="8">
                     <el-form-item label="Shipped To">
                         <el-select v-model="mpoForm.shippedTo">
@@ -99,7 +98,13 @@
                         <el-input v-model="mpoForm.attn" style="width: 210px;" />
                     </el-form-item>
                 </el-col>
-
+                <el-col :span="8">
+                    <el-form-item label="Terms">
+                <el-select v-model="mpoForm.terms">
+                    <el-option v-for="item in terms" :value="item" />
+                </el-select>
+            </el-form-item>
+                </el-col>
             </el-row>
             <el-row>
                 <el-col :span="4">
@@ -128,27 +133,31 @@
                     </el-form-item>
 
                 </el-col>
-            </el-row>
-            <el-form-item label="Terms">
-                <el-select v-model="mpoForm.terms">
-                    <el-option v-for="item in terms" :value="item" />
-                </el-select>
-            </el-form-item>
-            <el-form-item label="Payment">
+                <el-col :span="8">
+                    <el-form-item label="Payment">
                 <el-select v-model="mpoForm.payment">
                     <el-option v-for="item in payments" :value="item" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="DeliveryAddress">
-                <el-input v-model="mpoForm.deliveryAddress" />
-            </el-form-item>
+                </el-col>
+            </el-row>
+           
+          
+          
             <el-row>
-                <el-col :span="3">
+                <el-col :span="4">
                     <el-form-item label="OverRecvAllowance">
                         <el-input v-model="mpoForm.allowPurchase" />
                     </el-form-item>
                 </el-col>
+                <el-col :span="4">
 
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="DeliveryAddress">
+                <el-input v-model="mpoForm.deliveryAddress" />
+            </el-form-item>
+                </el-col>
             </el-row>
             <el-form-item label="OverQty">
                 <el-radio-group v-model="mpoForm.overQtyType">
@@ -179,7 +188,7 @@
             </el-form-item>
 
             <el-form-item label="Detail">
-                <el-table :data="mpoForm.mpoDetail" :row-class-name="tableRowClassName" :summary-method="getSumDetail"
+                <el-table :data="mpoForm.mpoDetail" :row-class-name="tableRowClassName" 
                     stripe border style="width: 100%;" @cell-click="tabClick">
 
                     <el-table-column prop="seq" label="Seq" property="true">
@@ -409,11 +418,11 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-button class="mt-4" style="width: 100%;" @click="addRow">Add Item</el-button>
+                <el-button class="mt-4" style="width: 100%;" type="primary" @click="addRow">Add Item</el-button>
             </el-form-item>
             <el-form-item label="Surcharge">
                 <el-table :data="mpoForm.mpoSurcharge" :row-class-name="surchargeTableRowClassName"
-                    @cell-click="surchargeTabClick" @cell-mouse-leave="surchargeCellMouseLeave" border style="width: 100%;">
+                    @cell-click="surchargeTabClick" border style="width: 100%;">
                     <el-table-column prop="surType" label="SurType">
                         <template #default="scope">
                             <span v-if="scope.row.index === tabSurchargeClickIndex && tabSurchargeClickLabel === 'SurType'">
@@ -437,7 +446,7 @@
                             <span
                                 v-if="scope.row.index === tabSurchargeClickIndex && tabSurchargeClickLabel === 'SurPercent'">
                                 <el-input v-model="scope.row.surPercent" placeholder="please input quantity" size="mini"
-                                    @blue="inputSurchargeBlur" />
+                                    @blue="inputSurchargeBlur" @change="handleSurPercentEdit(scope.$index,scope.row)" />
                             </span>
                             <span v-else>{{ scope.row.surPercent }}</span>
                         </template>
@@ -460,7 +469,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSave">Save</el-button>
-                <el-button @click="onDelete">Delete</el-button>
+                <!-- <el-button @click="onDelete">Delete</el-button> -->
             </el-form-item>
         </el-form>
     </div>
@@ -516,6 +525,7 @@ export default (await import('vue')).defineComponent({
 
         const mpoFormRef = ref(mpoForm);
         const suppliers = ref([]);
+    
         const count = ref(1);
         const mpoTypes = ref(["BUY TO ORDER", "PROVIDED BY CLIENT", "DEFECT REPLACEMENT", "ADDITIONAL PURCHASE", "PURCHASE CALICO"])
         const lightings = ref(["ETD", "ETA", "CLOSING"]);
@@ -713,54 +723,21 @@ export default (await import('vue')).defineComponent({
             mpoForm.mpoSurcharge.splice(index, 1);
         }
 
-        const surchargeCellMouseLeave = (row, column, cell, event) => {
-            switch (column.label) {
-                case ("SurPercent"):
-                    console.log(mpoForm.mpoSurcharge[row.index]["surPercent"] / 100);
-                    break;
-                default:
-                    break;
+        
+
+        const handleSurPercentEdit=(index,row)=>{
+            if(row.surPercent){
+                
+                var mpoAmount=0;
+                
+                for(let i=0;i<mpoForm.mpoDetail.length;i++){
+                    mpoAmount+=mpoForm.mpoDetail[i]["qty"]*mpoForm.mpoDetail[i]["upx"];
+                }
+                row.surAmount=Number(row.surPercent)/100*mpoAmount;
             }
         }
-        var qtys = 0;
-        var prices = 0;
-        const getSumDetail = (param) => {
-            const { columns, data } = param;
-
-            //console.log(columns);
-
-            //     columns.forEach((column, index) => {
-            //     const values = data.map((item) => Number(item[column.property]));
-
-            //     //console.log(column.property)
-            //     // if (column.property == "qty") {
-            //     //     qtys = values.reduce((prev, curr) => {
-            //     //         const value = Number(curr);
-            //     //         if (!isNaN(value)) {
-            //     //             return prev + curr;
-            //     //         } else {
-            //     //             return prev;
-            //     //         }
-            //     //     }, 0);
-            //     // }
-            //     // if (column.property == "upx") {
-            //     //     prices = values.reduce((prev, curr) => {
-            //     //         const value = Number(curr);
-            //     //         if (!isNaN(value)) {
-            //     //             return prev + curr;
-            //     //         } else {
-            //     //             return prev;
-            //     //         }
-            //     //     }, 0)
-            //     // }
-
-            //     console.log(qtys*prices);
-
-
-            // })
-
-
-        }
+     
+       
         const onSave = () => {
             proxy.$refs.mpoFormRef.validate((valid) => {
                 if (valid) {
@@ -818,7 +795,7 @@ export default (await import('vue')).defineComponent({
                         http.mpo.saveMpo(txMpoHd).then((res) => {
                             proxy.$message({ message: "successfully save", type: "info" });
                         }).catch((error) => {
-                            proxy.$message({ message: error.data, type: "error" });
+                            proxy.$message({ message: error.message, type: "error" });
 
                         })
                         store.commit("clearSelectedData");
@@ -836,14 +813,22 @@ export default (await import('vue')).defineComponent({
 
         function initData() {
 
-            http.dtrade.getSupplier().then((res) => {
-                suppliers.value = res.data;
+            if(sessionStorage.getItem("user")){
+                store.commit("setUserInfo",sessionStorage.getItem("user"));
+                mpoForm.incharge=store.state.userInfo;
+            }
+            if(sessionStorage.getItem("supplier")){
+                suppliers.value=JSON.parse(sessionStorage.getItem("supplier"));
+            }
+            //suppliers.value=store.state.suppliers;
+            // http.dtrade.getSupplier().then((res) => {
+            //     suppliers.value = res.data;
 
 
 
-            }).catch((error) => {
+            // }).catch((error) => {
 
-            });
+            // });
 
             http.dtrade.getTerms().then((res) => {
                 terms.value = res.data;
@@ -1014,8 +999,7 @@ export default (await import('vue')).defineComponent({
             getMatDetail,
             getVisible,
             getMatCode,
-            surchargeCellMouseLeave,
-            getSumDetail,
+            handleSurPercentEdit,
 
         }
     },

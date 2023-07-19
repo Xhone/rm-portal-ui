@@ -13,6 +13,8 @@
 
 <script>
 import axios from 'axios';
+import http from '@/http/api';
+import store from '@/store/index'
 import HeadBar from '../views/HeadBar/HeadBar.vue'
 import NavBar from '../views/NavBar/NavBar.vue'
 import MainContent from '@/views/MainContent/MainContent.vue'
@@ -49,8 +51,21 @@ export default {
                 }).catch(function (res) {
                     alert(res);
                 })
-        }
+        },
+        initSGSDate(){
+            http.dtrade.getSupplier().then((res) => {
+                store.commit("clearSupplier")
+                store.commit("setSupplier",res.data);
+                sessionStorage.setItem("supplier",JSON.stringify(store.state.suppliers));
 
+            }).catch((error) => {
+
+            });
+        },
+
+    },
+    mounted(){
+        this.initSGSDate();
     }
 }
 </script>
