@@ -29,7 +29,7 @@
                     <i class="el-icon-document" />
                     <span>Export to RM1</span>
                 </template>
-                <el-menu-item index="2-1">
+                <el-menu-item index="2-1" @click="this.$router.push({name:'PackList'})">
                     <el-icon>
                         <Histogram />
                     </el-icon>

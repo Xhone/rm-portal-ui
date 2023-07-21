@@ -4,7 +4,7 @@
             <MaMatHeadDet :visible="dialogVisible" @selected-mat-code="getMatCode"></MaMatHeadDet>
         </div>
         <el-form ref="mpoFormRef" :model="mpoForm" :rules="dataFormRules" style="padding: 0px 20px 0px 0px;"
-        label-position="right" label-width="120px">
+            label-position="right" label-width="120px">
             <el-row>
                 <el-col :span="8">
                     <el-form-item label="Mpo No" prop="mpoNo">
@@ -100,10 +100,10 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="Terms">
-                <el-select v-model="mpoForm.terms">
-                    <el-option v-for="item in terms" :value="item" />
-                </el-select>
-            </el-form-item>
+                        <el-select v-model="mpoForm.terms">
+                            <el-option v-for="item in terms" :value="item" />
+                        </el-select>
+                    </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
@@ -135,15 +135,15 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="Payment">
-                <el-select v-model="mpoForm.payment">
-                    <el-option v-for="item in payments" :value="item" />
-                </el-select>
-            </el-form-item>
+                        <el-select v-model="mpoForm.payment">
+                            <el-option v-for="item in payments" :value="item" />
+                        </el-select>
+                    </el-form-item>
                 </el-col>
             </el-row>
-           
-          
-          
+
+
+
             <el-row>
                 <el-col :span="4">
                     <el-form-item label="OverRecvAllowance">
@@ -155,8 +155,8 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="DeliveryAddress">
-                <el-input v-model="mpoForm.deliveryAddress" />
-            </el-form-item>
+                        <el-input v-model="mpoForm.deliveryAddress" />
+                    </el-form-item>
                 </el-col>
             </el-row>
             <el-form-item label="OverQty">
@@ -188,8 +188,8 @@
             </el-form-item>
 
             <el-form-item label="Detail">
-                <el-table :data="mpoForm.mpoDetail" :row-class-name="tableRowClassName" 
-                    stripe border style="width: 100%;" @cell-click="tabClick">
+                <el-table :data="mpoForm.mpoDetail" :row-class-name="tableRowClassName" stripe border style="width: 100%;"
+                    @cell-click="tabClick">
 
                     <el-table-column prop="seq" label="Seq" property="true">
                         <template #default="scope">
@@ -446,7 +446,7 @@
                             <span
                                 v-if="scope.row.index === tabSurchargeClickIndex && tabSurchargeClickLabel === 'SurPercent'">
                                 <el-input v-model="scope.row.surPercent" placeholder="please input quantity" size="mini"
-                                    @blue="inputSurchargeBlur" @change="handleSurPercentEdit(scope.$index,scope.row)" />
+                                    @blue="inputSurchargeBlur" @change="handleSurPercentEdit(scope.$index, scope.row)" />
                             </span>
                             <span v-else>{{ scope.row.surPercent }}</span>
                         </template>
@@ -525,7 +525,7 @@ export default (await import('vue')).defineComponent({
 
         const mpoFormRef = ref(mpoForm);
         const suppliers = ref([]);
-    
+
         const count = ref(1);
         const mpoTypes = ref(["BUY TO ORDER", "PROVIDED BY CLIENT", "DEFECT REPLACEMENT", "ADDITIONAL PURCHASE", "PURCHASE CALICO"])
         const lightings = ref(["ETD", "ETA", "CLOSING"]);
@@ -579,63 +579,6 @@ export default (await import('vue')).defineComponent({
 
         var matCode = ref('');
 
-        if (store.state.selectedData) {
-
-            if (store.state.selectedData.length > 0) {
-                //console.log(store.state.userInfo);
-                mpoForm.incharge = store.state.userInfo;
-                mpoForm.heading = store.state.selectedData[0]["scHeading"];
-                mpoForm.shipmentDate = new Date();
-                mpoForm.supplier = store.state.selectedData[0]["suppCode"];
-                mpoForm.suppEngName = store.state.selectedData[0]["suppName"];
-                mpoForm.currency = store.state.selectedData[0]["ccy"];
-                mpoForm.rate = store.state.selectedData[0]["rate"];
-                mpoForm.jobNo = store.state.selectedData[0]["jobNo"];
-
-                for (let i = 1; i < store.state.selectedData.length; i++) {
-                    if (store.state.selectedData[i]["jobNo"] != store.state.selectedData[i - 1]["jobNo"]) {
-                        mpoForm.jobNo += "," + store.state.selectedData[i]["jobNo"];
-                    }
-                }
-
-                http.dtrade.getSumPoData(store.state.selectedData).then((res) => {
-
-
-                    for (let d of res.data) {
-                        //console.log(d);
-                        mpoForm.mpoDetail.push({
-                            seq: count.value++,
-                            matCode: d["matCode"],
-                            tempMat: d["tempMat"],
-                            colorCode: d["colorCode"],
-                            color: d["color"],
-                            size: d["sizes"],
-                            qty: d["mrReqQty_B"],
-                            mrQty: d["mrReqQty_B"],
-                            stockQty: 0,
-                            firstMrQty: d["mrReqQty_B"],
-                            buyUnit: d["buyUnit"],
-                            upx: d["uPx"],
-                            pxUnit: d["pxUnit"],
-                            width: d["width1"],
-                            weight: d["weight"],
-                            widthUnit: d["widthUnit"],
-                            buyUnitFactor: d["buyUnitFactor"],
-                            pxUnitFactor: d["pxUnitFactor"],
-                            matDesc: d["matDesc"],
-                            txMpoDetMrs: d["mrDatas"]
-                        })
-
-                        //console.log(mpoForm.mpoDetail);
-
-                    }
-                }).catch((error) => {
-
-                })
-
-                getMatDetail();
-            }
-        }
 
 
         const dataFormRules = ref({
@@ -658,6 +601,67 @@ export default (await import('vue')).defineComponent({
             }
             else {
                 mpoForm.mpoSurcharge[rowIndex]["surDescription"] = surcharges.value[index]["surDescription"];
+            }
+
+        }
+
+        function getGenMpo() {
+            if (store.state.selectedData) {
+
+                if (store.state.selectedData.length > 0) {
+                    //console.log(store.state.userInfo);
+                    mpoForm.incharge = store.state.userInfo;
+                    mpoForm.heading = store.state.selectedData[0]["scHeading"];
+                    mpoForm.shipmentDate = new Date();
+                    mpoForm.supplier = store.state.selectedData[0]["suppCode"];
+                    mpoForm.suppEngName = store.state.selectedData[0]["suppName"];
+                    mpoForm.currency = store.state.selectedData[0]["ccy"];
+                    mpoForm.rate = store.state.selectedData[0]["rate"];
+                    mpoForm.jobNo = store.state.selectedData[0]["jobNo"];
+
+                    for (let i = 1; i < store.state.selectedData.length; i++) {
+                        if (store.state.selectedData[i]["jobNo"] != store.state.selectedData[i - 1]["jobNo"]) {
+                            mpoForm.jobNo += "," + store.state.selectedData[i]["jobNo"];
+                        }
+                    }
+
+                    http.dtrade.getSumPoData(store.state.selectedData).then((res) => {
+
+
+                        for (let d of res.data) {
+                            //console.log(d);
+                            mpoForm.mpoDetail.push({
+                                seq: count.value++,
+                                matCode: d["matCode"],
+                                tempMat: d["tempMat"],
+                                colorCode: d["colorCode"],
+                                color: d["color"],
+                                size: d["sizes"],
+                                qty: d["mrReqQty_B"],
+                                mrQty: d["mrReqQty_B"],
+                                stockQty: 0,
+                                firstMrQty: d["mrReqQty_B"],
+                                buyUnit: d["buyUnit"],
+                                upx: d["uPx"],
+                                pxUnit: d["pxUnit"],
+                                width: d["width1"],
+                                weight: d["weight"],
+                                widthUnit: d["widthUnit"],
+                                buyUnitFactor: d["buyUnitFactor"],
+                                pxUnitFactor: d["pxUnitFactor"],
+                                matDesc: d["matDesc"],
+                                txMpoDetMrs: d["mrDatas"]
+                            })
+
+                            //console.log(mpoForm.mpoDetail);
+
+                        }
+                    }).catch((error) => {
+
+                    })
+
+                    getMatDetail();
+                }
             }
 
         }
@@ -723,21 +727,21 @@ export default (await import('vue')).defineComponent({
             mpoForm.mpoSurcharge.splice(index, 1);
         }
 
-        
 
-        const handleSurPercentEdit=(index,row)=>{
-            if(row.surPercent){
-                
-                var mpoAmount=0;
-                
-                for(let i=0;i<mpoForm.mpoDetail.length;i++){
-                    mpoAmount+=mpoForm.mpoDetail[i]["qty"]*mpoForm.mpoDetail[i]["upx"];
+
+        const handleSurPercentEdit = (index, row) => {
+            if (row.surPercent) {
+
+                var mpoAmount = 0;
+
+                for (let i = 0; i < mpoForm.mpoDetail.length; i++) {
+                    mpoAmount += mpoForm.mpoDetail[i]["qty"] * mpoForm.mpoDetail[i]["upx"];
                 }
-                row.surAmount=Number(row.surPercent)/100*mpoAmount;
+                row.surAmount = Number(row.surPercent) / 100 * mpoAmount;
             }
         }
-     
-       
+
+
         const onSave = () => {
             proxy.$refs.mpoFormRef.validate((valid) => {
                 if (valid) {
@@ -813,12 +817,15 @@ export default (await import('vue')).defineComponent({
 
         function initData() {
 
-            if(sessionStorage.getItem("user")){
-                store.commit("setUserInfo",sessionStorage.getItem("user"));
-                mpoForm.incharge=store.state.userInfo;
+            if (sessionStorage.getItem("user")) {
+                store.commit("setUserInfo", sessionStorage.getItem("user"));
+                mpoForm.incharge = store.state.userInfo;
             }
-            if(sessionStorage.getItem("supplier")){
-                suppliers.value=JSON.parse(sessionStorage.getItem("supplier"));
+            if (sessionStorage.getItem("supplier")) {
+                suppliers.value = JSON.parse(sessionStorage.getItem("supplier"));
+
+
+
             }
             //suppliers.value=store.state.suppliers;
             // http.dtrade.getSupplier().then((res) => {
@@ -910,13 +917,7 @@ export default (await import('vue')).defineComponent({
             mpoForm.mpoDetail.splice(index, 1);
         }
 
-        onMounted(() => {
-            initData();
-
-        });
-
-        onUpdated(() => {
-            //console.log("update test");
+        function getEditMpo() {
             if (store.state.isEdited) {
                 if (store.state.mpoData) {
                     let mpoData = store.state.mpoData;
@@ -932,10 +933,23 @@ export default (await import('vue')).defineComponent({
                     mpoForm.lighting = mpoData.lighting
                     mpoForm.shippedTo = mpoData.shippedTo;
                     mpoForm.supplier = mpoData.suppCode
-                    //mpoForm.suppEngName
+                    for (const supp of suppliers.value) {
+                        if (supp.suppCode === mpoData.suppCode) {
+                            mpoForm.suppEngName = supp.engName;
+                            break;
+                        }
+
+                    }
+
                     mpoForm.incharge = mpoData.inCharge
                     mpoForm.currency = mpoData.ccy;
-                    mpoForm.rate = mpoData.rate;
+                    for (const v of currencies.value) {
+                        if (v.ccy === mpoData.ccy) {
+                            mpoForm.rate = v.rate;
+                            break;
+                        }
+                    }
+
                     switch (mpoData.status) {
                         case 'O':
                             mpoForm.status = 'Open';
@@ -964,6 +978,19 @@ export default (await import('vue')).defineComponent({
                     mpoForm.mpoSurcharge = mpoData.txMpoSurcharges;
                 }
             }
+        }
+
+        onMounted(() => {
+            initData();
+            //console.log("onMounted");
+            //console.log(store.state.selectedData);
+            getGenMpo();
+            getEditMpo();
+        });
+
+        onUpdated(() => {
+            //console.log(store.state.isEdited);
+            getEditMpo();
         });
 
 
@@ -996,11 +1023,12 @@ export default (await import('vue')).defineComponent({
             getRate,
             getSurDescription,
             handleSurchargeDelete,
+            getGenMpo,
             getMatDetail,
             getVisible,
             getMatCode,
             handleSurPercentEdit,
-
+            getEditMpo,
         }
     },
     data() {

@@ -22,6 +22,10 @@ let viewgird=[
         path:'/SearchMpo',
         name:'SearchMpo',
         component:()=>import('@/views/PurchaseOrder/SearchMpo.vue')
+    },{
+        path:'/PackList',
+        name:'PackList',
+        component:()=>import('@/views/PackList/PackList.vue')
     }
 ]
 
