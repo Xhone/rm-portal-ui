@@ -3,8 +3,8 @@
         <br/><br/><br/><br/>
         <form>
             <div id="save_case">
-                <el-button type="primary" @click="SavePage">保存</el-button>
-                <el-button type="primary" @click="dialogTableVisible=true">导出PackList Excel</el-button>
+                <el-button type="primary" @click="SavePage">SAVE</el-button>
+                <el-button type="primary" @click="dialogTableVisible=true">Export PackList Excel</el-button>
                 <!-- <el-button type="primary">导出Excel报关</el-button> -->
             </div>
             <table id="table1">
@@ -12,70 +12,70 @@
                     <td>
                         <el-button @click="threePortClick" size="mini" type="primary" style="margin:0;padding: 0; width:40px;height: 40px; float:right;">...</el-button>
                      
-                        <el-input type="text" id="packlistNO"  placeholder="请输入数据!" class="elinput" v-model="packlistno" maxlength="30" @focus="SelectPackListMessage" style="width: 130px;" v-if="packlistnoIsShow"></el-input>
+                        <el-input readonly type="text" id="packlistNO"    class="elinput" v-model="packlistno" maxlength="30" @focus="SelectPackListMessage" style="width: 130px;" v-if="packlistnoIsShow"></el-input>
                         <p>Mat PackList No:</p>
                         
                     </td>
                     <td>
                         
-                        <el-input type="Date" placeholder="请输入数据!" class="elinput" v-model="date" style="width: 130px;"></el-input>
+                        <el-input readonly type="Date"  class="elinput" v-model="date" style="width: 130px;"></el-input>
                         <p>Date:</p>
                     </td>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="ccy2"></el-input>
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="ccy1"></el-input>
+                        <el-input readonly  class="elinput" v-model="ccy2"></el-input>
+                        <el-input  readonly class="elinput" v-model="ccy1"></el-input>
                         <p>Ccy:</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="factory"></el-input>
+                        <el-input readonly  class="elinput" v-model="factory"></el-input>
                         <p>Factory:</p>
                     </td>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="preparedby"></el-input>
+                        <el-input readonly  class="elinput" v-model="preparedby"></el-input>
                         <p>Prepared By:</p>
                     </td>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="TtlCtn"></el-input>
+                        <el-input  readonly class="elinput" v-model="TtlCtn"></el-input>
                         <p>Ttl Ctn:</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="DocNo"></el-input>
+                        <el-input  readonly class="elinput" v-model="DocNo"></el-input>
                         <p>Doc No.:</p>
                     </td>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="SCHeading"></el-input>
+                        <el-input  readonly class="elinput" v-model="SCHeading"></el-input>
                         <p>SC Heading:</p>
                     </td>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="TtlNW"></el-input>
+                        <el-input  readonly class="elinput" v-model="TtlNW"></el-input>
                         <p>Ttl NW:</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="TtlGW"></el-input>
+                        <el-input readonly  class="elinput" v-model="TtlGW"></el-input>
                         <p>Ttl GW:</p>
                     </td>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="exportFlag"></el-input>
+                        <el-input readonly  class="elinput" v-model="exportFlag"></el-input>
                         <p>ExportFlag:</p>
                     </td>
                     <td>
                         
-                        <el-input placeholder="请输入数据!" class="elinput" v-model="fabtrim"></el-input>
+                        <el-input  readonly class="elinput" v-model="fabtrim"></el-input>
                         <p>FabTrim:</p>
                     </td>
                 </tr>
@@ -88,9 +88,9 @@
                     
                     <div class="threeButton">
                 
-                        <el-button @click="toggleSelection()" type="danger">取消选择</el-button>
-                        <el-button type="primary" @click="PartMarkDN">批量Mark D/N</el-button>
-                        <el-button type="primary" @click="PartMarkAdjustment">批量Mark ADJUSTMENT</el-button>
+                        <el-button @click="toggleSelection()" type="danger">Unselect</el-button>
+                        <el-button type="primary" @click="PartMarkDN">Batch Mark D/N</el-button>
+                        <el-button type="primary" @click="PartMarkAdjustment">Batch Mark ADJUSTMENT</el-button>
                         <!-- <el-button type="primary">批量Mark Taking</el-button> -->
                     </div>
                     
@@ -98,7 +98,7 @@
                         ref="multipleTable"
                         :data="tableData"
                         tooltip-effect="dark"
-                        style="width: 100%"
+                        style="width: 100%;height: 50vh;"
                        >
                         <el-table-column
                             prop="selection"
@@ -228,7 +228,7 @@
                             width="120">
                         </el-table-column>
                         <el-table-column
-                            label="Ch Mat desc(中文物料描述)"
+                            label="Ch Mat desc(Chinese material description)"
                             width="120">
                             <template #default="scope">
                                 <el-input type="text" size="mini"  v-model="scope.row.ChMatDesc"  class="elinput" />
@@ -236,7 +236,7 @@
                         </el-table-column>
                         <el-table-column
                         
-                            label="Color desc(手动输入)"
+                            label="Color desc(Manual input)"
                             width="120">
                             <template #default="scope">
                                 <el-input type="text" size="mini"  v-model="scope.row.ColorDesc"  class="elinput" />
@@ -244,7 +244,7 @@
                         </el-table-column>
                         <el-table-column
             
-                            label="Roll_No（手动输入）"
+                            label="Roll_No（Manual input）"
                             width="120">
                             <template #default="scope">
                                 <el-input type="text" size="mini"  v-model="scope.row.RollNo"  class="elinput" />
@@ -264,7 +264,7 @@
                         </el-table-column>
                         <el-table-column
                             fixed="right"
-                            label="操作"
+                            label="Operation"
                             width="380" style="text-align: center;">
                             <template #default="scope">
                                 
@@ -321,7 +321,7 @@
                         <tr>
                             <td> 
                                 <el-input style="float:right;width: 100px;"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_From">
                                 </el-input>
                                 <p style="float:right;">From ：</p>
@@ -329,7 +329,7 @@
                             <td>
                                 
                                 <el-input style="float:right;width: 100px;"
-                                    placeholder="请输入内容"
+                                readonly
                                     v-model="input_To">
                                 </el-input>
                                 <p style="float:right;">To： </p>
@@ -337,7 +337,7 @@
                             <td>
                                 
                                 <el-input style="float:right;width: 100px;"
-                                    placeholder="请输入内容"
+                                readonly
                                     v-model="input_VIA">
                                 </el-input>
                                 <p style="float:right;">VIA： </p>
@@ -348,7 +348,7 @@
                             
                                 <el-input style="float:right;width: 100px;"
                                     type="date"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_ETD">
                                 </el-input>
                                 <p style="float:right;">ETD： </p>
@@ -357,7 +357,7 @@
                             
                                 <el-input style="float:right;width: 100px;"
                                     type="date"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_ETA">
                                 </el-input>
                                 <p style="float:right;">ETA： </p>
@@ -366,7 +366,7 @@
                             
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_Vessel">
                                 </el-input>
                                 <p style="float:right;">Vessel： </p>
@@ -377,7 +377,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_Mode">
                                 </el-input>
                                 <p style="float:right;">Mode： </p>
@@ -386,7 +386,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_Container">
                                 </el-input>
                                 <p style="float:right;">Container： </p>
@@ -395,7 +395,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_VoyNo">
                                 </el-input>
                                 <p style="float:right;">Voy No.： </p>
@@ -406,7 +406,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_SealNo">
                                 </el-input>
                                 <p style="float:right;">Seal No： </p>
@@ -415,7 +415,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_MatContract">
                                 </el-input>
                                 <p style="float:right;">Mat Contract# ：</p>
@@ -424,7 +424,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_BlNo">
                                 </el-input>
                                 <p style="float:right;">BL No ：</p>
@@ -436,7 +436,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_Origin">
                                 </el-input>
                                 <p style="float:right;">Origin ：</p>
@@ -445,7 +445,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_Terms">
                                 </el-input>
                                 <p style="float:right;">Terms： </p>
@@ -454,7 +454,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_FREIGHT">
                                 </el-input>
                                 <p style="float:right;">FREIGHT： </p>
@@ -465,7 +465,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_ToCountry">
                                 </el-input>
                                 <p style="float:right;">To Country： </p>
@@ -474,7 +474,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_PayMent">
                                 </el-input>
                                 <p style="float:right;">PayMent ：</p>
@@ -483,7 +483,7 @@
                                 
                                 <el-input style="float:right;width: 100px;"
                                     type="text"
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="input_InSurance">
                                 </el-input>
                                 <p style="float:right;">InSurance： </p>
@@ -496,7 +496,7 @@
                                     type="textarea"
                                     :rows="5"
                                 
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="textarea3">
                                 </el-input> 
                                 
@@ -507,7 +507,7 @@
                                     type="textarea"
                                     :rows="5"
                                 
-                                    placeholder="请输入内容"
+                                    readonly
                                     v-model="textarea4">
                                 </el-input> 
                             </td>
@@ -517,22 +517,15 @@
 
                 </el-tab-pane>
             </el-tabs>
-            <el-popover ref="popover"
-                                    placement="top-start"
-                                    title="标题"
-                                    width="200"
-                                    trigger="hover"
-                                    content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
-                                    <el-button slot="reference">hover 激活</el-button>
-                                </el-popover>
+        
         </form>
    
         
-        <el-dialog title="导出Excel" v-model="dialogTableVisible" width="80%"  style="height: 500px;" append-to-body  class="fansdialog">
+        <el-dialog title="Export Excel" v-model="dialogTableVisible" width="80%"  style="height: 500px;" append-to-body  class="fansdialog">
                 <exportexcel :packlistno="packlistno" @onevent="getDataExportExcel"></exportexcel>
         </el-dialog>
 
-        <el-dialog title="带出packlist" v-model="dialogTableVisiblePackList"  width="80%"  append-to-body class="fansdialog">
+        <el-dialog title="Carry Packlist" v-model="dialogTableVisiblePackList"  width="80%"  append-to-body class="fansdialog">
                 <SelectPackList  @onevent="getOnePackList"></SelectPackList>
         </el-dialog>
        
@@ -545,9 +538,10 @@ import axios from 'axios';
 import exportexcel from './exportexcel.vue'
 import SelectPackList from './SelectPackList.vue'
 import Qs from "qs"		//引入qs
-import { ref } from 'vue'
+import http from '@/http/api'
+import { onMounted, ref } from 'vue';
 
-let serverUrl="https://localhost:44311/api/PackList"
+//let serverUrl="https://localhost:44311/api/PackList"
 
 export default{
   name: 'PackList',
@@ -556,20 +550,27 @@ export default{
 
     const dialogTableVisiblePackList = ref(false);
     const dialogTableVisible =ref(false);  
-      const threePortClick=()=>{
+    const threePortClick=()=>{
         dialogTableVisiblePackList.value=true
-      };
-      const exportPackListExcel=()=>{
+    };
+    const exportPackListExcel=()=>{
         dialogTableVisible.value=true
-      };
-
-
-      return {
+    };
+    const multipleTable = ref(null);
+    const getMultipleTable = () => {
+      //console.log("11111"+multipleTable.value);
+    };
+    onMounted(() => {
+        getMultipleTable();
+    });
+    return {
         dialogTableVisiblePackList,
         threePortClick,
         dialogTableVisible,
-        exportPackListExcel
-      };
+        exportPackListExcel,
+        multipleTable
+    };
+
   },
   data() {
       return {
@@ -675,6 +676,8 @@ export default{
             //    }
             // });
             let rowDocNo='';
+            
+            console.log(this.$refs.multipleTable.selection);
             this.$refs.multipleTable.selection.forEach((row)=>{
                 
                 if(rowDocNo!=row["DocNo"]){
@@ -712,13 +715,9 @@ export default{
         this.exportFlag=data;
       },
       SavePage()
-      {     let datata = this.allData;
+      {   
             console.log(this.tableData);
-            axios({
-                    method:'post',
-                    url:serverUrl+'/SavePages',//服务器url
-                    headers:{"Content-Type":"application/json"},
-                    data: {
+            let data={
                         PackNo: this.packlistno,
                         PackDate:this.date,
                         Ccy: this.ccy1,
@@ -758,19 +757,20 @@ export default{
                         textarea4_k:this.textarea4,
                         SummaryTable:this.tableData,
                         CtnTables:this.CtnTables
-                     },
-                }).then((res) =>{
+                     }
+
+            http.packlist.SavePage(data).then((res) =>{
                     if(res.data)
                     {
                         this.$notify({
-                            title: '成功',
-                            message: '保存成功',
+                            title: 'success',
+                            message: 'save success',
                             type: 'success'
                         });
                     }else{
                         this.$notify({
-                            title: '失败',
-                            message: '保存失败',
+                            title: 'error ',
+                            message: 'save error',
                             type: 'error'
                         });
                     }
@@ -779,11 +779,81 @@ export default{
                 }).catch((res) =>{
                     
                     this.$notify({
-                            title: '失败',
-                            message: '保存失败',
+                            title: 'error ',
+                            message: 'save error',
                             type: 'error'
-                    });
-                })      
+                        });
+                });     
+            // axios({
+            //         method:'post',
+            //         url:serverUrl+'/SavePages',//服务器url
+            //         headers:{"Content-Type":"application/json"},
+            //         data: {
+            //             PackNo: this.packlistno,
+            //             PackDate:this.date,
+            //             Ccy: this.ccy1,
+            //             CcyRate:this.ccy2,
+            //             Factory:this.factory,
+            //             PreparedBy:this.preparedby,
+            //             TtlCtn:this.TtlCtn,
+            //             SCHeading_k:this.SCHeading,
+            //             TtlNW_k:this.TtlNW,
+            //             TtlGW_k:this.TtlGW,
+            //             exportFlag_k:this.exportFlag,
+            //             fabtrim_k:this.fabtrim,
+            //             text1_k:this.text1,
+            //             text2_k:this.text2,
+            //             text3_k:this.text3,
+            //             textarea_k:this.textarea,
+            //             textarea2_k:this.textarea2,
+            //             inputFrom:this.input_From,
+            //             inputTo:this.input_To,
+            //             inputVIA:this.input_VIA,
+            //             inputETD:this.input_ETD,
+            //             inputETA:this.input_ETA,
+            //             inputVessel:this.input_Vessel,
+            //             inputMode:this.input_Mode,
+            //             inputContainer:this.input_Container,
+            //             inputVoyNo:this.input_VoyNo,
+            //             inputSealNo:this.input_SealNo,
+            //             inputMatContract:this.input_MatContract,
+            //             inputBlNo:this.input_BlNo,
+            //             inputOrigin:this.input_Origin,
+            //             inputTerms:this.input_Terms,
+            //             inputFREIGHT:this.input_FREIGHT,
+            //             inputToCountry:this.input_ToCountry,
+            //             inputPayMent:this.input_PayMent,
+            //             inputInSurance:this.input_InSurance,
+            //             textarea3_k:this.textarea3,
+            //             textarea4_k:this.textarea4,
+            //             SummaryTable:this.tableData,
+            //             CtnTables:this.CtnTables
+            //          },
+            //     }).then((res) =>{
+            //         if(res.data)
+            //         {
+            //             this.$notify({
+            //                 title: '成功',
+            //                 message: '保存成功',
+            //                 type: 'success'
+            //             });
+            //         }else{
+            //             this.$notify({
+            //                 title: '失败',
+            //                 message: '保存失败',
+            //                 type: 'error'
+            //             });
+            //         }
+
+                    
+            //     }).catch((res) =>{
+                    
+            //         this.$notify({
+            //                 title: '失败',
+            //                 message: '保存失败',
+            //                 type: 'error'
+            //         });
+            //     })      
 
            
       },
@@ -801,11 +871,8 @@ export default{
         //console.log("MarkDN:"+index, row);
         //对tableData进行过滤 表达式中false就过滤掉，true就留下  ,目的就是要把点击行的DocNo清除
         //再将Mark 回来的数据放到tableData中
-        
-        axios({
-            url:serverUrl+'/GetMarkDN?id='+row.DocNo,//服务器url
-            method:"get"
-        }).then((res)=>{
+        let data = { id:row.DocNo}
+        http.packlist.doMarkDN(data).then((res)=>{
                 if(res.data!=''){
                     this.tableData=this.tableData.filter(item=>item.DocNo!=row.DocNo);
                     res.data.forEach(element=>{
@@ -828,25 +895,71 @@ export default{
                                 this.tableData.push(vote);
                     });
                     this.$notify({
-                                title: '成功',
-                                message: 'Mark DN 成功',
+                                title: 'success',
+                                message: 'Mark DN success',
                                 type: 'success'
                     });
                 }else{
                     this.$notify({
-                            title: '失败',
-                            message: '没有 DN  数据',
+                            title: 'error',
+                            message: 'No DN data',
                             type: 'error'
                     });
                 }
                 
             }).catch((res)=>{
                 this.$notify({
-                            title: '失败',
-                            message: 'Mark DN 失败',
+                            title: 'error',
+                            message: 'Mark DN error',
                             type: 'error'
                 });
             });
+
+        // axios({
+        //     url:serverUrl+'/GetMarkDN?id='+row.DocNo,//服务器url
+        //     method:"get"
+        // }).then((res)=>{
+        //         if(res.data!=''){
+        //             this.tableData=this.tableData.filter(item=>item.DocNo!=row.DocNo);
+        //             res.data.forEach(element=>{
+        //                         let vote={}
+        //                         vote.Seq=element["seq"];
+        //                         vote.MatKey=element["matKey"];
+        //                         vote.DocNo=element["docNo"];
+        //                         vote.Mat_Code = element["mat_Code"];
+        //                         vote.Mpo_No=element["mpo_No"];
+        //                         vote.uc_Px=element["uc_Px"];
+        //                         vote.Temp_Mat=element["temp_Mat"];
+        //                         vote.Job_No=element["job_No"];
+        //                         vote.Issus_Unit=element["issus_Unit"];
+        //                         vote.Color_Code=element["color_Code"];
+        //                         vote.Color=element["color"];
+        //                         vote.ChnColor=element["chnColor"];
+        //                         vote.sizes=element["sizes"];
+        //                         vote.Invoice_No=element["invoice_No"];
+        //                         vote.MPO_Description=element["mpO_Description"];
+        //                         this.tableData.push(vote);
+        //             });
+        //             this.$notify({
+        //                         title: '成功',
+        //                         message: 'Mark DN 成功',
+        //                         type: 'success'
+        //             });
+        //         }else{
+        //             this.$notify({
+        //                     title: '失败',
+        //                     message: '没有 DN  数据',
+        //                     type: 'error'
+        //             });
+        //         }
+                
+        //     }).catch((res)=>{
+        //         this.$notify({
+        //                     title: '失败',
+        //                     message: 'Mark DN 失败',
+        //                     type: 'error'
+        //         });
+        //     });
 
             //对table的数据进行排序
             this.tableData=this.tableData.sort((p1,p2)=>{
@@ -858,10 +971,8 @@ export default{
         //console.log(index, row);
         
         //再将Mark 回来的数据放到tableData中
-        axios({
-            url:serverUrl+'/GetStkAdj?id='+row.DocNo,//服务器url
-            method:"get"
-        }).then((res)=>{
+        let data={id:row.DocNo}
+        http.packlist.doMarkAdJustMent(data).then((res)=>{
                 
                 if(res.data!=''){
                     //对tableData进行过滤 表达式中false就过滤掉，true就留下  ,目的就是要把点击行的DocNo清除
@@ -886,25 +997,72 @@ export default{
                                 this.tableData.push(vote);
                     });
                     this.$notify({
-                                title: '成功',
-                                message: 'Mark Adjustment 成功',
+                                title: 'success',
+                                message: 'Mark Adjustment success',
                                 type: 'success'
                     });    
                 }else{
                     this.$notify({
-                            title: '失败',
-                            message: '没有 Adjustment 数据',
+                            title: 'error',
+                            message: 'No Adjustment data',
                             type: 'error'
                     });
                 }
                 
             }).catch((res)=>{
                 this.$notify({
-                            title: '失败',
-                            message: 'Mark Adjustment 失败',
+                            title: 'error',
+                            message: 'Mark Adjustment error',
                             type: 'error'
                 });
-            });
+        });
+        // axios({
+        //     url:serverUrl+'/GetStkAdj?id='+row.DocNo,//服务器url
+        //     method:"get"
+        // }).then((res)=>{
+                
+        //         if(res.data!=''){
+        //             //对tableData进行过滤 表达式中false就过滤掉，true就留下  ,目的就是要把点击行的DocNo清除
+        //             this.tableData=this.tableData.filter(item=>item.DocNo!=row.DocNo);
+        //             res.data.forEach(element=>{
+        //                         let vote={}
+        //                         vote.Seq=element["seq"];
+        //                         vote.MatKey=element["matKey"];
+        //                         vote.DocNo=element["docNo"];
+        //                         vote.Mat_Code = element["mat_Code"];
+        //                         vote.Mpo_No=element["mpo_No"];
+        //                         vote.uc_Px=element["uc_Px"];
+        //                         vote.Temp_Mat=element["temp_Mat"];
+        //                         vote.Job_No=element["job_No"];
+        //                         vote.Issus_Unit=element["issus_Unit"];
+        //                         vote.Color_Code=element["color_Code"];
+        //                         vote.Color=element["color"];
+        //                         vote.ChnColor=element["chnColor"];
+        //                         vote.sizes=element["sizes"];
+        //                         vote.Invoice_No=element["invoice_No"];
+        //                         vote.MPO_Description=element["mpO_Description"];
+        //                         this.tableData.push(vote);
+        //             });
+        //             this.$notify({
+        //                         title: '成功',
+        //                         message: 'Mark Adjustment 成功',
+        //                         type: 'success'
+        //             });    
+        //         }else{
+        //             this.$notify({
+        //                     title: '失败',
+        //                     message: '没有 Adjustment 数据',
+        //                     type: 'error'
+        //             });
+        //         }
+                
+        //     }).catch((res)=>{
+        //         this.$notify({
+        //                     title: '失败',
+        //                     message: 'Mark Adjustment 失败',
+        //                     type: 'error'
+        //         });
+        //     });
 
             //对table的数据进行排序
             this.tableData=this.tableData.sort((p1,p2)=>{
@@ -944,11 +1102,10 @@ export default{
             alert("Mat PackList No can not empty!");
             return;
         }
-        axios({
-                method:'get',
-                url:serverUrl+'/GetPackList?id='+this.packlistno,//服务器url
-                
-                }).then((res) =>{
+        let params={
+            id:this.packlistno
+        }
+        http.packlist.packListSelect(params).then((res)=>{
                     console.log(res.data);
                     this.packlistno=res.data["packNo"];
                     this.date=res.data["packDate"];
@@ -1027,14 +1184,105 @@ export default{
                        
                    
                    this.$notify({
-                        title: '成功',
-                        message: '导入成功',
+                        title: 'Success',
+                        message: 'Import successfully',
                         type: 'success'
                    });
-                }).catch((res) =>{
+        }).catch((res) =>{
                     
-                    alert("没有连接到服务器，请联系管理员！");
-                })
+                    alert("No connection to the server, please contact the administrator！");
+        });
+        // axios({
+        //         method:'get',
+        //         url:serverUrl+'/GetPackList?id='+this.packlistno,//服务器url
+                    
+        //         }).then((res) =>{
+        //             console.log(res.data);
+        //             this.packlistno=res.data["packNo"];
+        //             this.date=res.data["packDate"];
+        //             this.ccy1=res.data["ccy"];
+        //             this.ccy2=res.data["ccyRate"];
+        //             this.factory=res.data["factory"];
+        //             this.preparedby=res.data["preparedBy"];
+        //             this.SCHeading=res.data["scHeading"];
+        //             this.TtlCtn=res.data["ttlCtn"];
+        //             this.TtlGW = res.data["ttlGW"];
+        //             this.TtlNW=res.data["ttlNW"];
+                    
+        //             this.input_From=res.data["frStr"];
+        //             this.input_BlNo=res.data["blNo"];
+        //             this.input_Container=res.data["container"];
+        //             this.input_ETA=res.data["eta"];
+        //             this.input_ETD=res.data["etd"];
+        //             this.input_MatContract=res.data["matContract"];
+        //             this.input_Mode=res.data["mode"];
+        //             this.input_Origin=res.data["origin"];
+        //             this.input_SealNo=res.data["sealNo"];
+        //             this.textarea3=res.data["shippingRemark"];
+        //             this.textarea4=res.data["remark"];
+        //             this.input_Terms=res.data["terms"];
+        //             this.input_ToCountry=res.data["toCountry"];
+        //             this.input_To=res.data["toStr"];
+        //             this.input_Vessel=res.data["vessel"];
+        //             this.input_VoyNo=res.data["voyNo"];
+        //             this.input_PayMent=res.data["payment"];
+        //             this.input_VIA=res.data["via"];
+
+        //             this.tableData=[];
+        //             this.CtnTables=[];
+        //             if(res.data["summaryList"]!=null){
+        //                 res.data["summaryList"].forEach(element=>{
+        //                     let vote={}
+        //                     vote.Seq=element["seq"];
+        //                     vote.SumId=element["sumId"];
+        //                     vote.MatKey=element["matKey"];
+        //                     vote.DocNo=element["docNo"];
+        //                     vote.Mat_Code = element["mat_Code"];
+        //                     vote.Mpo_No=element["mpo_No"];
+        //                     vote.uc_Px=element["uc_Px"];
+        //                     vote.Temp_Mat=element["temp_Mat"];
+        //                     vote.ctn_No=element["ctn_No"];
+        //                     vote.Job_No=element["job_No"];
+        //                     //vote.lot=element["lot"];
+        //                     vote.Issus_Unit=element["issus_Unit"];
+        //                     vote.Color_Code=element["color_Code"];
+        //                     vote.Color=element["color"];
+        //                     vote.ChnColor=element["chnColor"];
+        //                     vote.sizes=element["sizes"];
+        //                     vote.Invoice_No=element["invoice_No"];
+        //                     vote.MPO_Description=element["mpO_Description"];
+        //                     vote.Custom_Description=element["custom_Description"];
+        //                     if(element["ctnInfoList"]!=null)
+        //                     {
+        //                         element["ctnInfoList"].forEach(row=>{
+        //                             var ctnvote={}
+        //                             ctnvote.cbm=row["cbm"];
+        //                             ctnvote.ctn=row["ctn"];
+        //                             ctnvote.gw=row["gw"];
+        //                             ctnvote.nw=row["nw"];
+        //                             ctnvote.height=row["height"];
+        //                             ctnvote.length=row["length"];
+        //                             ctnvote.width=row["width"];
+        //                             ctnvote.ctn_Qty=row["ctn_Qty"];
+        //                             this.CtnTables.push(ctnvote);
+        //                         });
+
+        //                     }
+                            
+        //                     this.tableData.push(vote);
+        //                 });
+        //             }
+                       
+                   
+        //            this.$notify({
+        //                 title: '成功',
+        //                 message: '导入成功',
+        //                 type: 'success'
+        //            });
+        //         }).catch((res) =>{
+                    
+        //             alert("没有连接到服务器，请联系管理员！");
+        //         })
       },
       exportPackListExcel()
       {

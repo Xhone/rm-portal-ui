@@ -151,7 +151,7 @@ export default defineComponent({
 
     .main-content {
         position: absolute;
-        top: 45px;
+        top: 25px;
         left: 5px;
         right: 5px;
         bottom: 5px;

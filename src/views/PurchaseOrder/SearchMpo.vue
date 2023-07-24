@@ -1,4 +1,13 @@
 <template>
+    <div class="sblock">
+     <el-tabs @tab-click="selectedTabHandle">
+        <el-tab-pane label="GenMpo">GenMPO</el-tab-pane>
+        <el-tab-pane label="New">New</el-tab-pane>
+        <el-button type="primary" @click="this.$router.push({ name: 'GenMPO' })">GenMpo</el-button>
+        <el-button type="primary" @click="this.$router.push({name:'EditMpo'})">New</el-button>
+     </el-tabs>
+       
+    </div>
     <div>
         <div class="sblock">
             <label>MpoNo: </label>
@@ -186,6 +195,13 @@ export default defineComponent({
 
         }
 
+        const selectedTabHandle=(pane,event)=>{
+            console.log(pane.label);
+            if(pane.label==="GenMpo"){
+                proxy.$router.push({ name: 'GenMPO' })
+            }
+        }
+
         function defaultDate() {
 
             const end = new Date()
@@ -217,6 +233,7 @@ export default defineComponent({
             tableData,
             handleEdit,
             handleDelete,
+            selectedTabHandle,
             defaultDate,
         }
 
@@ -324,7 +341,7 @@ export default defineComponent({
 .sblock {
     width: 1200px;
     display: flex;
-    margin: 20px 0;
+    margin: 8px 0;
 }
 
 label {

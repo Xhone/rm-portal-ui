@@ -1,18 +1,19 @@
 <template>
     <div>
-        <p>FTP上传文件</p>
-        <el-input  placeholder="请输入数据!"  maxlength="10"></el-input>
+        <p>Uploading files through FTP</p>
+        <el-input  placeholder="Please enter data!"  maxlength="10"></el-input>
         <el-form :model="upform" :rules="uprules" style="width:100%;" ref="upform" label-width="100px">
-                <el-form-item label="上传附件:">
+                <el-form-item label="Upload attachment:">
                     <el-button type="primary"
                                     @click="upLoad()"
                                     size="mini"
                                     class="form-btn"
-                                    >点击上传</el-button>
+                                    >Click to upload</el-button>
         </el-form-item>
 </el-form>
     </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -39,7 +40,7 @@ export default{
             const file = inputFile.files[0];
             var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
             if (!fileType.includes(testmsg)) {
-              _this.$message.warning("上传的文件格式只能是,xls,xlsx,et");
+              _this.$message.warning("The file format to be uploaded must be xlsx");
               document.body.removeChild(inputFile);
               return false;
             }

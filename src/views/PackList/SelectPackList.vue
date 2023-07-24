@@ -1,8 +1,8 @@
 <template>
     <div>
       
-            <p>选择PackListNo</p>
-            <el-select v-model="value" style="width:130px;" placeholder="请选择">
+            <p>Select to PackListNo</p>
+            <el-select v-model="value" style="width:130px;" placeholder="Please Select">
                 <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -10,15 +10,15 @@
                 :value="item.value">
                 </el-option>
             </el-select>
-            <el-input type="text"  placeholder="请输入数据!" v-model="fieldValue" maxlength="30"  style="width: 150px;"></el-input>
-            <el-button type="primary" @click="packlistselect">查询</el-button>
+            <el-input type="text"  placeholder="Please input data!" v-model="fieldValue" maxlength="30"  style="width: 150px;"></el-input>
+            <el-button type="primary" @click="packlistselect">Search</el-button>
             <br/>
             <br/>
             <br/>
             <br/>
             <el-table
                 :data="tableData"
-                style="width: 100%"
+                style="width: 100%;height: 300px;"
                 @cell-dblclick="bccelldblclick">
                     <el-table-column
                         prop="packNo"
@@ -39,6 +39,7 @@
 
 <script>
 import axios from 'axios';
+import http from '@/http/api'
 
 let serverUrl="https://localhost:44311/api/PackList"
 
@@ -91,15 +92,11 @@ export default{
         },
         packlistselect()
         {   //查询符合条件的数据
-            axios({
-                url:serverUrl+'/SelectSomePackList',//服务器url
-                method:"post",
-                headers:{"Content-Type":"application/json"},  
-                data:JSON.stringify({
+            let data={
                     fieldName:this.value,
                     filedValue:this.fieldValue
-                })
-            }).then((res)=>{
+            }
+            http.packlist.packlistselect(data).then((res)=>{
                 this.tableData=[];
                 res.data.forEach(element=>{
                     let vote={};
@@ -109,8 +106,32 @@ export default{
                 });
 
             }).catch((res)=>{
-               
+                this.$notify({
+                        title: 'error',
+                        message: 'The query fails. Please contact the administrator！',
+                        type: 'error'
+                });   
             });
+            // axios({
+            //     url:serverUrl+'/SelectSomePackList',//服务器url
+            //     method:"post",
+            //     headers:{"Content-Type":"application/json"},  
+            //     data:JSON.stringify({
+            //         fieldName:this.value,
+            //         filedValue:this.fieldValue
+            //     })
+            // }).then((res)=>{
+            //     this.tableData=[];
+            //     res.data.forEach(element=>{
+            //         let vote={};
+            //         vote.packNo =element["packNo"];
+            //         vote.packDate=element["packDate"];
+            //         this.tableData.push(vote);
+            //     });
+
+            // }).catch((res)=>{
+               
+            // });
         }
     },
     created(){
@@ -118,10 +139,8 @@ export default{
 
     },
     mounted() {
-        axios({
-            url:serverUrl+'/selectPackList',//服务器url
-            method:"post"
-        }).then((res)=>{
+
+        http.packlist.packlistAllselect().then((res)=>{
             console.log(res.data);
             res.data.forEach(element=>{
                 let vote={};
@@ -131,11 +150,29 @@ export default{
             });
         }).catch((res)=>{
             this.$notify({
-                        title: '失败',
-                        message: '查询失败，请联系管理员！',
+                        title: 'error',
+                        message: 'The query fails. Please contact the administrator！',
                         type: 'error'
              });   
         });
+        // axios({
+        //     url:serverUrl+'/selectPackList',//服务器url
+        //     method:"post"
+        // }).then((res)=>{
+        //     console.log(res.data);
+        //     res.data.forEach(element=>{
+        //         let vote={};
+        //         vote.packNo =element["packNo"];
+        //         vote.packDate=element["packDate"];
+        //         this.tableData.push(vote);
+        //     });
+        // }).catch((res)=>{
+        //     this.$notify({
+        //                 title: 'error',
+        //                 message: 'The query fails. Please contact the administrator！',
+        //                 type: 'error'
+        //      });   
+        // });
     }
 }
 

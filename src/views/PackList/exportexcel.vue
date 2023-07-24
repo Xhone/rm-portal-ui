@@ -71,6 +71,8 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import Qs from "qs"	
+import http from '@/http/api'
+
 let year = new Date().getFullYear();
 let month = new Date().getMonth() +1;
 let day = new Date().getDate();
@@ -78,7 +80,7 @@ let hour = new Date().getHours();
 let minute = new Date().getMinutes();
 let second = new Date().getSeconds();
 
-let serverUrl="https://localhost:44311/api/PackList"
+//let serverUrl="https://localhost:44311/api/PackList"
 
 export default{
     
@@ -93,7 +95,13 @@ export default{
         return{
             tp:"",
             poNumber:"",
-            packNumber:this.packlistno,
+_packNumber: this.packlistno,
+get packNumber() {
+return this._packNumber;
+},
+set packNumber(value) {
+this._packNumber = value;
+},
             fileList: [],
             btn1:"Export PackList excel",
             btn2:"Export PO  Excel",
@@ -178,37 +186,63 @@ export default{
               
             })
             console.log(this.tables);
-                axios({
-                        method:'post',
-                        url:serverUrl+'/uploadFTP',//服务器url
-                        headers:{"Content-Type":"application/json"},     
-                        data: JSON.stringify({
-                            name:this.tables
-                        })
-                        
-                }).then(res=>{
+            let data={
+                name:this.tables
+            }
+            http.packlist.uploadSectionFile(data).then(res=>{
                     if(res.data){
                             this.$notify({
-                                    title: '成功',
-                                    message: '上传成功',
+                                    title: 'success',
+                                    message: 'Upload successfully',
                                     type: 'success'
                             });
                             this.fileList=[]
                             this.tables=[]
                         }else{
                             this.$notify({
-                                    title: '失败',
-                                    message: '失败成功',
+                                    title: 'error',
+                                    message: 'Upload failure',
                                     type: 'error'
                             });
                         }
                 }).catch(res=>{
                     this.$notify({
-                                    title: '失败',
-                                    message: '失败成功',
+                                    title: 'error',
+                                    message: 'Upload failure',
                                     type: 'error'
                             });
                 })
+                // axios({
+                //         method:'post',
+                //         url:serverUrl+'/uploadFTP',//服务器url
+                //         headers:{"Content-Type":"application/json"},     
+                //         data: JSON.stringify({
+                //             name:this.tables
+                //         })
+                        
+                // }).then(res=>{
+                //     if(res.data){
+                //             this.$notify({
+                //                     title: '成功',
+                //                     message: '上传成功',
+                //                     type: 'success'
+                //             });
+                //             this.fileList=[]
+                //             this.tables=[]
+                //         }else{
+                //             this.$notify({
+                //                     title: '失败',
+                //                     message: '失败成功',
+                //                     type: 'error'
+                //             });
+                //         }
+                // }).catch(res=>{
+                //     this.$notify({
+                //                     title: '失败',
+                //                     message: '失败成功',
+                //                     type: 'error'
+                //             });
+                // })
                 this.isOneCycle="false";
             
             
@@ -250,16 +284,14 @@ export default{
             if(this.packlistno==""){
                 alert("Receipt number is empty, please enter！");
             }else{
-                axios({
-                    method:'get',
-                    url:serverUrl+'/GetPackListExcel?id='+this.packlistno,//服务器url
-                
-                }).then((res) =>{
+                let data={id:this.packlistno}
+
+                http.packlist.exportPackListExcel(data).then((res) =>{
                     console.log(res.data);
                     if(res.data){
                         this.$notify({
-                                title: '导入成功',
-                                message: '文件在D:\\Excel中',
+                                title: 'export success',
+                                message: 'The file is in D:\\Excel',
                                 type: 'success'
                         });
                         this.$emit("onevent",this.message);
@@ -267,7 +299,26 @@ export default{
                    
                 }).catch((res) =>{
                     alert("The export fails.Please contact the administrator!");
-                })
+                });
+
+                // axios({
+                //     method:'get',
+                //     url:serverUrl+'/GetPackListExcel?id='+this.packlistno,//服务器url
+                
+                // }).then((res) =>{
+                //     console.log(res.data);
+                //     if(res.data){
+                //         this.$notify({
+                //                 title: '导入成功',
+                //                 message: '文件在D:\\Excel中',
+                //                 type: 'success'
+                //         });
+                //         this.$emit("onevent",this.message);
+                //     }
+                   
+                // }).catch((res) =>{
+                //     alert("The export fails.Please contact the administrator!");
+                // })
             }
             
         },
@@ -277,10 +328,8 @@ export default{
             if(this.poNumber==""){
                 alert("Purchase order number is empty, please enter！");
             }else{
-                    axios({
-                    methods:"get",
-                    url:serverUrl+'/GetPOExcel?id='+this.poNumber,
-                    }).then((res)=>{
+                    let data={id:this.poNumber}
+                    http.packlist.getPoExcel(data).then((res)=>{
                             console.log(res.data);
                             this.pojson_data=[];
                             res.data.forEach(element => {
@@ -323,6 +372,52 @@ export default{
                         alert("The export fails.Please contact the administrator!");
 
                     })
+                    // axios({
+                    // methods:"get",
+                    // url:serverUrl+'/GetPOExcel?id='+this.poNumber,
+                    // }).then((res)=>{
+                    //         console.log(res.data);
+                    //         this.pojson_data=[];
+                    //         res.data.forEach(element => {
+                    //             let vote = {}
+                    //             vote.po_order_id=element["poorderid"]
+                    //             vote.version=element["version"]
+                    //             vote.po_order_date=element["poorderdate"]
+                    //             vote.gmt_supplier_code=element["gmtsuppliercode"]
+                    //             vote.yarn_supplier_country=element["yarnsuppliercountry"]
+                    //             vote.ccy=element["ccy"]
+                    //             vote.status_code=element["statuscode"]
+                    //             vote.ship_date=element["shipdate"]
+                    //             vote.jobnos=element["jobnos"]
+                    //             vote.dly_country=element["dlycountry"]
+                    //             vote.gmt_supplier_conper=element["gmtsupplierconper"]
+                    //             vote.merchandiser=element["merchandiser"]
+                    //             vote.uom=element["uom"]
+                    //             vote.origin=element["origin"]
+                    //             vote.amount=element["amount"]
+                    //             vote.dest_port=element["destport"]
+                    //             vote.qty=element["qty"]
+                    //             vote.price=element["price"]
+                    //             vote.yarn_supplier_addr=element["yarnsupplieraddr"]
+                    //             vote.country_origin=element["countryorigin"]
+                    //             vote.dest_port_country=element["dest_portcountry"]
+                    //             vote.pay_term_code=element["paytermcode"]
+                    //             vote.dly_country=element["dlycountry"]
+                    //             vote.ship_mode=element["shipmode"]
+                    //             vote.season_code=element["seasoncode"]
+                    //             vote.season_year=element["seasonyear"]
+                    //             vote.cust_code=element["custcode"]
+                    //             vote.color_desc=element["colordesc"]
+                    //             vote.color_ref=element["colorref"]
+                    //             vote.color_ref2=element["colorref2"]
+                    //             this.pojson_data.push(vote)
+                    //         });
+                    //         alert("Export complete!");
+
+                    // }).catch((res)=>{
+                    //     alert("The export fails.Please contact the administrator!");
+
+                    // })
 
             }
 

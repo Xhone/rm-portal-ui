@@ -7,7 +7,7 @@ import * as dict from './modules/dict'
 import * as log from './modules/log'
 import * as mpo from './modules/mpo'
 import * as dtrade from './modules/dtrade'
-
+import * as packlist from './modules/packlist'
 export default{
     login,
     user,
@@ -17,5 +17,6 @@ export default{
     dict,
     log,
     mpo,
-    dtrade
+    dtrade,
+    packlist,
 }
